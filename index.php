@@ -67,7 +67,12 @@ $dataBindersInterest = base64_encode(json_encode([
   'musics' => [
     'listing' => ['rap', 'muzak', 'rock', 'metal', 'funk', 'classic', 'blues', 'jazz']
   ],  
-  'sport' => 'parkour'
+  'sport' => 'parkour',
+  'functions' => [
+    'limitedList' =><<<JS
+
+JS    
+  ]
 ]));
 
 $templatePersonalInterest = base64_encode(utf8_decode(<<<HTML
@@ -117,8 +122,8 @@ HTML));
         left: 3px;
       }
       :root{
-        --padding: 20px 10px 10px 10px;
-        --margin: 5px;
+        --padding: 1rem;
+        --margin: 0.5rem;
         --font-size-small:0.75rem;
         --font-size-regular:1rem;
         --font-size-medium:1.25rem;
@@ -156,7 +161,7 @@ HTML));
       }
       .response{
         border: 0;
-        padding: 5px;
+        padding: var(--padding);
         margin: var(--margin);
         font-size: var(--font-size-small);
         word-break: break-all;
@@ -165,9 +170,15 @@ HTML));
         box-sizing: border-box;
         background-color: #424242;
         font-family: monospace;
+        padding-bottom: 40px;
+        position: relative;
+        padding-right: 100px;
+      }
+      .response > div {
+        display: inline;
       }
       .text{
-        font-size: var(--font-size-bigger);
+        font-size: var(--font-size-medium);
         padding: var(--padding);
         margin: var(--margin);
         word-break: break-all;
@@ -210,7 +221,6 @@ HTML));
         border: 0;
         color: #b2ebf2;
         font-size: 1rem;
-        font-weight: bold;
         border-radius: 5px;
         cursor:pointer;
       }
@@ -219,7 +229,12 @@ HTML));
         border-radius: 5px;
         color: #fff;
         background: #b71c1c;
-        cursor:pointer;
+        cursor: pointer;
+        margin: 0;
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 5px;
       }
     </style>
     
@@ -303,20 +318,45 @@ HTML));
 
     <!-- a template to be used by data-templated -->
     <template data-template="menus">
+      <style>
+          .scoped h2{
+            font-size: 2rem;
+            color: #ad1457;
+            padding: 0;
+            margin: 0 0 10px 0;
+          }
+          .scoped ul{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+          }
+          .scoped li{
+            padding: 5px 0;
+            font-size: 1.2rem;
+          }
+          .scoped a{
+            color: #e91e63;
+            text-decoration: none;
+          }
+      </style>
       {{#menus}}
-        Menus:
-        <ul>
-          {{#menus.listing}}
-            <li id="{{id}}"><a href="{{link}}">{{{text}}}</a></li>
-          {{/menus.listing}}
-        </ul>
+        <div class="scoped">  
+          <h2>Menus:</h2>
+          <ul>
+            {{#menus.listing}}
+              <li id="{{id}}"><a href="{{link}}">{{{text}}}</a></li>
+            {{/menus.listing}}
+          </ul>
+        </div>  
       {{/menus}}
     </template>  
     
     <div class="container">
-      <h3>Personal Data:</h3>
-      <div class="response" data-binded="personal"></div>
-      <button data-action="delete" data-prop="personal" class="clear">clear state</button>  
+      <div class="response">
+        <span>Personal Data: </span>
+        <div data-binded="personal"></div>
+        <button data-action="delete" data-prop="personal" class="clear">clear state</button>  
+      </div>  
     </div>  
     
     <div class="container">  
@@ -333,9 +373,11 @@ HTML));
     </div>  
     
     <div class="container">
-      <h3>Interest Data:</h3>
-      <div class="response" data-binded="interest"></div>  
-      <button data-action="delete" data-prop="interest" class="clear">clear state</button>  
+      <div class="response">
+        <span>Interest Data:</span>
+        <div data-binded="interest"></div>
+        <button data-action="delete" data-prop="interest" class="clear">clear state</button>  
+      </div> 
     </div>  
     
     <div class="container">
@@ -348,9 +390,11 @@ HTML));
     </div>  
     
     <div class="container">
-      <h3>Phones Data:</h3>
-      <div class="response" data-binded="phones"></div>
-      <button data-action="delete" data-prop="phones" class="clear">clear state</button>  
+      <div class="response">
+        <span>Phones Data:</span>
+        <div data-binded="phones"></div>
+        <button data-action="delete" data-prop="phones" class="clear">clear state</button>  
+      </div> 
     </div> 
     
     <div class="container">

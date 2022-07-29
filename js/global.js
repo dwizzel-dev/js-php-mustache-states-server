@@ -51,7 +51,7 @@ const Appz = () => {
 const anode = async (id, type, attr, content) => {
     await Appz().then(async (appz) => {
         const el = document.getElementById(id).appendChild(cnode(type, attr))
-        if(content !== undefined){
+        if(content !== undefined && content !== null){
             el.innerHTML = content
         }
         if(attr.hasOwnProperty('data-binded')){
@@ -99,18 +99,24 @@ const listAllEventListeners = () => {
 const addMenus = async () => {
     
     //create a container element
+
+    //our data binders states first since it takes longer to load   
+    await anode('body', 'input', {
+        type: 'hidden',
+        value: 'menus',
+        'data-binders': "@menus.json.php?lang=fr"
+    })
     
     //container    
     await anode('body', 'div', {class: 'container', id: 'menus-container'})
-    //h3
-    await anode('menus-container', 'h3', {}, 'Menus Data:')
     //reponse box
-    await anode('menus-container', 'div', {
-        class: 'response', 
-        'data-binded': 'menus'
-    })
+    await anode('menus-container', 'div', {class: 'response', id: 'menus-container-response'})
+    //title
+    await anode('menus-container-response', 'span', {}, 'Menus Data: ')
+    //the binded data 
+    await anode('menus-container-response', 'div', {'data-binded': 'menus'})
     //the delete button
-    await anode('menus-container', 'button', {
+    await anode('menus-container-response', 'button', {
         class: 'clear',
         'data-action': 'delete',
         'data-prop': 'menus'
@@ -127,12 +133,6 @@ const addMenus = async () => {
         'data-templated': '@menus'
     }, 'loading menus ...')
     
-    //our data binders states    
-    await anode('body', 'input', {
-        type: 'hidden',
-        value: 'menus',
-        'data-binders': "@menus.json.php?lang=fr"
-    })
 }
 
 // pushing later ondemand test with timeout or event scroll
