@@ -391,8 +391,9 @@ HTML));
       {{#news}}
         <div class="news">  
           <h2>News:</h2>
+          {{#news.functions.show}}{{/news.functions.show}}
+          <h4>{{{news.title}}}</4>
           <ul>
-            {{#news.functions.show}} ... {{/news.functions.show}}
             {{#news.listing}}
               <li>
                 <h3>{{{title}}}</h3>

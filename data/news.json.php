@@ -1,6 +1,7 @@
 <?php
 $title = $_REQUEST['cat'] ?? '';
 $news = [
+    "title" => "Some {$title}!",
     "listing" => [
         [
             "title" => "Good {$title} News",

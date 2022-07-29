@@ -203,12 +203,12 @@ const test = async (delay) => {
         let ids = null
         appz.obsstates('interest.sport', (s) => {
             console.log('OBSSTATES[interest.sport]:', s)
-            if(s === 'soccer'){
+            if(['soccer', 'foot'].indexOf(s) !== -1){
                 //fetch the news
                 if(!loaded){
                     loaded = true
                     //we will load some sports news
-                    addNews('soccer').then((containers) => {
+                    addNews(s).then((containers) => {
                         ids = containers    
                         console.log('NEWSCONTAINERS:', containers)
                     })
