@@ -18,7 +18,7 @@ $dataBindersPersonal = base64_encode(json_encode([
     'bold' =><<<JS
       
       //that just suround the content in bold
-      console.log("FUNCTIONS[bold]:", text)
+      //console.log("FUNCTIONS[bold]:", text);
       return '<i><b>' + render(text) + '</b></i>';
 
 JS,
@@ -26,7 +26,7 @@ JS,
     'clickable' =><<<JS
       
       //that just make the content clickable and use a global js function
-      console.log("FUNCTIONS[clickable]:", text)
+      //console.log("FUNCTIONS[clickable]:", text);
       return '<span class="clickable" onclick="onClickable(this);">' + render(text) + '</span>';
 
 JS,
@@ -34,7 +34,7 @@ JS,
     'asyncMarital' =><<<JS
         
       //that just testing the acces to window.appz states via global function
-      console.log("FUNCTIONS[asyncMarital]:", text)
+      console.log("FUNCTIONS[asyncMarital]:", text);
       //async/await not working in that context
       //needs to return render(text) right now, 
       //so will build one so the async can write too it later when ready
@@ -352,6 +352,7 @@ HTML));
       {{/menus}}
     </template>  
     
+
     <div class="container">
       <div class="response">
         <span>Personal Data: </span>

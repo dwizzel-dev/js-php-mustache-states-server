@@ -1,9 +1,15 @@
 
 //some utils
-const randId = () => 'ID' + Math.random().toString().replace('.', '')
+const _randId = () => 'ID' + Math.random().toString().replace('.', '')
+
+const _sleep = m => new Promise((resolve, reject) => setTimeout(() => {resolve()}, m))
+
+const _diff = (a1, a2) => a2.filter(d => !a1.includes(d))
+
+const _intersect = (a1, a2) => a2.filter(d => a1.includes(d))
 
 //load import async
-async function load(name) {
+async function _load(name) {
     return new Promise((resolve, reject) => {
         import(`/js/modules/${name}.mjs`).then((s) => {
             resolve(s)
@@ -14,7 +20,7 @@ async function load(name) {
 }
 
 //load file data async
-async function file(f) {
+async function _file(f) {
     return new Promise((resolve, reject) => {
         try{
             fetch((new URL(`/data/${f}`, window.top.location)).href).then((e) => {
@@ -31,16 +37,43 @@ async function file(f) {
     })
 }
 
+//check if element still there
+async function _garbage() {
+    return new Promise((resolve, reject) => {
+        if(!bindedElementIds.length){
+            resolve()
+        }
+        //let removed = []
+        //get all present ids
+        const present = [];
+        document.querySelectorAll("[data-uid]").forEach((el) => {
+            present.push(el.dataset.uid)
+        })
+        const diff = _diff(present, bindedElementIds)
+        if(diff.length){
+            //removeed from binded listener
+            ModStates.unregister(diff)
+            //remove from the stack
+            bindedElementIds = _intersect(present, bindedElementIds)        
+            //sopme debug
+            console.log('BINDEDELEMENTIDS:', {bindedElementIds})
+        }    
+        resolve()   
+    })
+}
+
 //main module for states
 
-const ModStates = await load('states').then((r) => r).catch((e) => null)
-const ModMustache = (await load('mustache').then((r) => r).catch((e) => null)).default
+const ModStates = await _load('states').then((r) => r).catch((e) => null)
+const ModMustache = (await _load('mustache').then((r) => r).catch((e) => null)).default
+
+let bindedElementIds = []
 
 const binded = async (item) => {
     if(item.dataset.isbinded !== undefined){
         return
     }
-    const uid = randId()
+    const uid = _randId()
     item.dataset.uid = uid
     item.dataset.isbinded = 1
     const bindd = item.dataset.binded
@@ -107,10 +140,7 @@ const binded = async (item) => {
         ModStates.register(prop, uid, (v) => render(v))
     })
     //some observer on mutations
-    const observer = new MutationObserver((ev) => {
-        console.log(`MUTATION:${uid}`, ev)
-    })
-    observer.observe(item, {subtree: true, childList: true});
+    bindedElementIds.push(uid)
 }
 
 const binders = async (item) => {
@@ -121,7 +151,7 @@ const binders = async (item) => {
         item.dataset.isbinders = 1
         const bd = item.dataset.binders
         if(bd.indexOf('@') !== -1){
-            await ModStates.setStates(item.value, await file(bd.replace('@', '')))        
+            await ModStates.setStates(item.value, await _file(bd.replace('@', '')))        
         }else{
             const obj = JSON.parse(atob(bd))
             if(obj.hasOwnProperty('functions')){
@@ -205,6 +235,17 @@ const obsstates = async(prop, uid, cb) => {
         ModMustache
     })
 })();
+
+(async () => {
+    let collect = async () => {
+        //check the elemnt not there anymore
+        await _garbage()
+        await _sleep(10000)
+        collect()
+    }
+    collect();
+})();
+
 
 
 export {binded, binders, binding, action, gstates, sstates, obsstates}

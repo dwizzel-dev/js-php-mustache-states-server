@@ -7,10 +7,10 @@ let registered = {}
 let undos = []
 let observables = {};
 
-const sleep = m => new Promise((resolve, reject) => setTimeout(() => {resolve()}, m))
+const _sleep = m => new Promise((resolve, reject) => setTimeout(() => {resolve()}, m))
 
 async function setStates(prop, value, nosave) {
-    await sleep(0)
+    await _sleep(0)
     if (states) {
         if(nosave === undefined){
             _save(prop, value)
@@ -56,7 +56,7 @@ async function setStates(prop, value, nosave) {
 }
 
 async function delStates(prop) {
-    await sleep(0)
+    await _sleep(0)
     if (states) {
         _save(prop)
         const rtn = Function('states', 'value', `
@@ -108,6 +108,25 @@ function register(prop, uid, cb){
         registered[prop] = {};
     }
     registered[prop][uid] = cb
+}
+
+function unregister(uids){
+    uids = typeof uids === 'string' ? [uids] : uids
+    //remove the elements
+    uids.forEach((uid) => {
+        Object.keys(registered).forEach((prop) => {
+            if(registered[prop][uid] !== undefined){
+                console.log('UNREGISTER:', uid)
+                delete registered[prop][uid]
+            }
+        })
+    })
+    //remove the keys if no element in item
+    Object.keys(registered).forEach((prop) => {
+        if(!Object.keys(registered[prop]).length){
+            delete registered[prop]
+        }
+    })
 }
 
 function observe(prop, cb){
@@ -221,6 +240,6 @@ async function undoStates(){
     }    
 }
 
-export { setStates , getStates, register, delStates, undoStates, observe }
+export { setStates , getStates, delStates, undoStates, register, unregister, observe }
 
 //EOF
