@@ -98,25 +98,30 @@ const listAllEventListeners = () => {
 
 const addMenus = async () => {
     
+    //@NOTES 
+    //if it doesnt have any dependecies on async data or get set thing
+    //no neeed to await anything since it will listen on before or after dta arrives
+
     //create a container element
 
     //our data binders states first since it takes longer to load   
-    await anode('body', 'input', {
+    anode('body', 'input', {
         type: 'hidden',
         value: 'menus',
         'data-binders': "@menus.json.php?lang=fr"
     })
     
+    
     //container    
-    await anode('body', 'div', {class: 'container', id: 'menus-container'})
+    anode('body', 'div', {class: 'container', id: 'menus-container'})
     //reponse box
-    await anode('menus-container', 'div', {class: 'response', id: 'menus-container-response'})
+    anode('menus-container', 'div', {class: 'response', id: 'menus-container-response'})
     //title
-    await anode('menus-container-response', 'span', {}, 'Menus Data: ')
+    anode('menus-container-response', 'span', {}, 'Menus Data: ')
     //the binded data 
-    await anode('menus-container-response', 'div', {'data-binded': 'menus'})
+    anode('menus-container-response', 'div', {'data-binded': 'menus'})
     //the delete button
-    await anode('menus-container-response', 'button', {
+    anode('menus-container-response', 'button', {
         class: 'clear',
         'data-action': 'delete',
         'data-prop': 'menus'
@@ -125,13 +130,14 @@ const addMenus = async () => {
     //create a div using the template and states
 
     //container
-    await anode('body', 'div', {class: 'container', id: 'menus-template'})
+    anode('body', 'div', {class: 'container', id: 'menus-template'})
     //the template div
-    await anode('menus-template', 'div', {
+    anode('menus-template', 'div', {
         class: 'text infos',
         'data-binded': 'menus',
         'data-templated': '@menus'
     }, 'loading menus ...')
+   
     
 }
 
@@ -156,10 +162,12 @@ const test = async (delay) => {
     !((t) => {
         return new Promise(resolve => {
             setTimeout(async () => {
-                await anode('personal-row-text', 'input', {
+                anode('personal-row-text', 'input', {
                     type: 'text',
-                    disabled: 1,
-                    'data-binded': "personal.gender"
+                    value: "Femme",
+                    placeholder: "Gender :",
+                    'data-binded': "personal.gender",
+                    'data-binding': "personal.gender"
                 })
                 resolve(t)
             }, t);
@@ -167,7 +175,7 @@ const test = async (delay) => {
     })(delay).then((t) => {
         return new Promise(resolve => {
             setTimeout(async () => {
-                await anode('personal-row-text', 'input', {
+                anode('personal-row-text', 'input', {
                     type: 'text',
                     class: 'binding-binded',
                     placeholder: "Marital :",
@@ -185,6 +193,6 @@ const test = async (delay) => {
 }
 
 
-test(1000)
+test(1500)
 
 //EOF

@@ -51,7 +51,7 @@ JS,
           if(m.toLowerCase() === 'm'){
             el.innerHTML = " ---> <b> Soooo sad :{</b> ";
           }else{
-            el.innerHTML = " ---> <b> Wow that's funtastic !!!</b> ";
+            el.innerHTML = " ---> <b style=\"color:#ab47bc;\"> Wow that's funtastic !!!</b> ";
           }  
         }
       }); 
