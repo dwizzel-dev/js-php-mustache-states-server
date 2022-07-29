@@ -149,11 +149,13 @@ const addNews = async (news) => {
 
     //create a container element
 
+    const prop = `news`
+
     //our data binders states first since it takes longer to load   
     await anode('body', 'input', {
         type: 'hidden',
-        value: news,
-        'data-binders': `@${news}.json`
+        value: prop,
+        'data-binders': `@news.json.php?cat=${news}`
     })
     
     const newsId = Math.random().toString().replace('.', '')
@@ -168,12 +170,12 @@ const addNews = async (news) => {
     //title
     await anode(response, 'span', {}, 'News Data: ')
     //the binded data 
-    await anode(response, 'div', {'data-binded': news})
+    await anode(response, 'div', {'data-binded': prop})
     //the delete button
     await anode(response, 'button', {
         class: 'clear',
         'data-action': 'delete',
-        'data-prop': news
+        'data-prop': prop
     }, 'clear state')
     
     //create a div using the template and states
@@ -183,7 +185,7 @@ const addNews = async (news) => {
     //the template div
     await anode(template, 'div', {
         class: 'text infos',
-        'data-binded': news,
+        'data-binded': prop,
         'data-templated': `@news`
     }, `loading ${news} ...`)
 
@@ -201,12 +203,12 @@ const test = async (delay) => {
         let ids = null
         appz.obsstates('interest.sport', (s) => {
             console.log('OBSSTATES[interest.sport]:', s)
-            if(s === 'test'){
+            if(s === 'soccer'){
                 //fetch the news
                 if(!loaded){
                     loaded = true
                     //we will load some sports news
-                    addNews('news').then((containers) => {
+                    addNews('soccer').then((containers) => {
                         ids = containers    
                         console.log('NEWSCONTAINERS:', containers)
                     })

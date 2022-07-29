@@ -149,31 +149,34 @@ const binders = async (item) => {
             return
         }
         item.dataset.isbinders = 1
+        let obj = null
         const bd = item.dataset.binders
         if(bd.indexOf('@') !== -1){
-            await ModStates.setStates(item.value, await _file(bd.replace('@', '')))        
+            obj = await _file(bd.replace('@', ''))
+            await ModStates.setStates(item.value, obj)        
         }else{
-            const obj = JSON.parse(atob(bd))
-            if(obj.hasOwnProperty('functions')){
-                //convert it to to real function
-                Object.keys(obj.functions).forEach((k) => {
-                    //get eh string functions
-                    let func = obj.functions[k]
-                    console.log(`FUNCTION-MAPPING[${k}]:\n ${func} \n`)
-                    //remap to real functionnal functions
-                    //where func could be : ' return "<i>" + render(text) + "</i>"; '
-                    obj.functions[k] = () => (text, render) => {
-                        return Function('render', 'text', `
-                            "use strict";
-                            //console.log(render, text);
-                            ${func};
-                        `)(render, text)
-                    } 
-                })
-            }
-            //await ModStates.setStates(item.value, obj)        
-            ModStates.setStates(item.value, obj)        
+            obj = JSON.parse(atob(bd))
         }
+        if(obj.hasOwnProperty('functions')){
+            //convert it to to real function
+            Object.keys(obj.functions).forEach((k) => {
+                //get eh string functions
+                let func = obj.functions[k]
+                console.log(`FUNCTION-MAPPING[${k}]:\n ${func} \n`)
+                //remap to real functionnal functions
+                //where func could be : ' return "<i>" + render(text) + "</i>"; '
+                obj.functions[k] = () => (text, render) => {
+                    return Function('render', 'text', `
+                        "use strict";
+                        //console.log(render, text);
+                        ${func};
+                    `)(render, text)
+                } 
+            })
+        }
+        //await ModStates.setStates(item.value, obj)        
+        ModStates.setStates(item.value, obj)        
+
     }catch(e){
         console.error(e)
     }    
