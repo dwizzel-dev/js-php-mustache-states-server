@@ -9,7 +9,7 @@ let observables = {};
 
 const _sleep = m => new Promise((resolve, reject) => setTimeout(() => {resolve()}, m))
 
-async function setStates(prop, value, nosave) {
+async function setStates(prop, value, nosave, noupdated) {
     await _sleep(0)
     if (states) {
         if(nosave === undefined){
@@ -46,7 +46,9 @@ async function setStates(prop, value, nosave) {
             return true;
         `)(states, value)
         if (rtn) {
-            _updated(prop)
+            if(noupdated === undefined){
+                _updated(prop)
+            }
             return rtn
         }
         console.error('STATE-NOT-UPDATED', rtn, states);
@@ -213,7 +215,7 @@ async function undoStates(){
         if(undos.length){
             const undo = undos.pop()
             if(undo.prop !== undefined && undo.json !== undefined){
-                setStates(undo.prop, undo.json, true).then((r) => {
+                setStates(undo.prop, undo.json, true, true).then((r) => {
                     let keys = Object.keys(registered).filter((k) => {
                         return (new RegExp(`${prefix}${undo.prop}`)).test(k);
                     });

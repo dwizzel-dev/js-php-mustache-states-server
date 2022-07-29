@@ -171,7 +171,8 @@ const binders = async (item) => {
                     } 
                 })
             }
-            await ModStates.setStates(item.value, obj)        
+            //await ModStates.setStates(item.value, obj)        
+            ModStates.setStates(item.value, obj)        
         }
     }catch(e){
         console.error(e)
@@ -243,6 +244,7 @@ const obsstates = async(prop, uid, cb) => {
         await _sleep(10000)
         collect()
     }
+    await _sleep(10000)
     collect();
 })();
 
