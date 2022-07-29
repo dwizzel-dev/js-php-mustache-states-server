@@ -359,6 +359,50 @@ HTML));
       {{/menus}}
     </template>  
     
+<!-- a template to be used by data-templated -->
+    <template data-template="news">
+      <style>
+         .news h2{
+            font-size: 2rem;
+            color: #333;
+            padding: 0;
+            margin: 0 0 10px 0;
+          }
+          .news h3{
+            padding: 0;
+            margin: 0;
+            width: unset;
+            text-align: left;
+          }
+          .news ul{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+          }
+          .news li{
+            padding: 5px 0;
+            font-size: 1.2rem;
+          }
+          .news a{
+            color: #e91e63;
+            text-decoration: none;
+          }
+      </style>
+      {{#news}}
+        <div class="news">  
+          <h2>News:</h2>
+          <ul>
+            {{#news.listing}}
+              <li id="{{id}}">
+                <h3>{{{title}}}</h3>
+                <p>{{{date}}}</p>
+                <p>{{{content}}}</p>
+              </li>
+            {{/news.listing}}
+          </ul>
+        </div>  
+      {{/news}}
+    </template>  
 
     <div class="container">
       <div class="response">

@@ -141,17 +141,70 @@ const addMenus = async () => {
     
 }
 
+const addNews = async (news) => {
+
+    //@NOTES 
+    //if it doesnt have any dependecies on async data or get set thing
+    //no neeed to await anything since it will listen on before or after dta arrives
+
+    //create a container element
+
+    //our data binders states first since it takes longer to load   
+    await anode('body', 'input', {
+        type: 'hidden',
+        value: news,
+        'data-binders': `@${news}.json`
+    })
+    
+    const newsId = Math.random().toString().replace('.', '')
+    const container = `news-${news}-container-${newsId}`
+    const response = `${container}-response`
+    const tpl = `${news}-template`
+
+    //container    
+    await anode('body', 'div', {class: 'container', id: container})
+    //reponse box
+    await anode(container, 'div', {class: 'response', id: response})
+    //title
+    await anode(response, 'span', {}, 'News Data: ')
+    //the binded data 
+    await anode(response, 'div', {'data-binded': news})
+    //the delete button
+    await anode(response, 'button', {
+        class: 'clear',
+        'data-action': 'delete',
+        'data-prop': news
+    }, 'clear state')
+    
+    //create a div using the template and states
+
+    //container
+    await anode('body', 'div', {class: 'container', id: tpl})
+    //the template div
+    await anode(tpl, 'div', {
+        class: 'text infos',
+        'data-binded': news,
+        'data-templated': `@news`
+    }, `loading ${news} ...`)
+    
+}
+
+
 // pushing later ondemand test with timeout or event scroll
 
 const test = async (delay) => {
 
     //a listener in javascript on a specific prop change
     Appz().then(async(appz) => {
-        appz.obsstates('interest.sport', (ev) => {
-            console.log('OBSSTATES[interest.sport]:', ev)
+        appz.obsstates('interest.sport', (s) => {
+            console.log('OBSSTATES[interest.sport]:', s)
+            if(s === 'test'){
+                //we will load some sports news
+                addNews('news')
+            }
         })
-        appz.obsstates('menus', (ev) => {
-            console.log('OBSSTATES[menus]:', ev)
+        appz.obsstates('menus', (obj) => {
+            console.log('OBSSTATES[menus]:', obj)
         })
     })
 
