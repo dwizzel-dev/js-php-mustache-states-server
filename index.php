@@ -212,6 +212,7 @@ HTML));
         left: 20px;
         width: 100px;
         height: 50px;
+        z-index:1;
       }
       .floating button{
         height: 100%;
@@ -228,7 +229,7 @@ HTML));
         border: 0;
         border-radius: 5px;
         color: #fff;
-        background: #b71c1c;
+        background: #b71c1c77;
         cursor: pointer;
         margin: 0;
         position: absolute;
@@ -238,16 +239,16 @@ HTML));
       }
     </style>
     
-    <script src="js/global.js" defer></script>
+    <script src="../js/global.js" defer></script>
 
     <!-- to load faster they dont inialize anything -->
-    <script type="module" src="js/modules/states.mjs" async></script>
-    <script type="module" src="js/modules/mustache.mjs" async></script>
-    <script type="module" src="js/index.mjs" async></script>
+    <script type="module" src="../js/modules/states.mjs" async></script>
+    <script type="module" src="../js/modules/mustache.mjs" async></script>
+    <script type="module" src="../js/index.mjs" async></script>
 
     <script type="module">
       //impot those functionnality will map them to a window object gloabal accessible
-      import {binded, binders, binding, action, gstates, sstates} from './js/index.mjs';
+      import {binded, binders, binding, action, gstates, sstates, obsstates} from '../js/index.mjs';
       //element that can init a state from json base64 encoded or files, first thing to check
       for await (const item of document.querySelectorAll('[data-binders]')) {
           await binders(item)
@@ -256,7 +257,7 @@ HTML));
       for await (const item of document.querySelectorAll('[data-binding]')) {
           await binding(item)
       }
-      //element that receive the state, third thing to check, we dont need to await this one !!!
+      //element that receive the state, third thing to check!!!
       for await (const item of document.querySelectorAll('[data-binded]')) {
           await binded(item)
       }
@@ -267,7 +268,7 @@ HTML));
       //map some functionnality
       //test async func or/and make it non blocking
       setTimeout(() => {
-        window.appz = {binded, binders, binding, action, gstates, sstates}
+        window.appz = {binded, binders, binding, action, gstates, sstates, obsstates}
       })
       
 

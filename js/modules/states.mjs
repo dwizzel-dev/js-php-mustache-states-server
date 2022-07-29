@@ -5,6 +5,7 @@ const prefix = '@'
 let states = {}
 let registered = {}
 let undos = []
+let observables = {};
 
 const sleep = m => new Promise((resolve, reject) => setTimeout(() => {resolve()}, m))
 
@@ -101,36 +102,55 @@ function getStates(name) {
     return null
 }
 
-function register(prop, cb){
+function register(prop, uid, cb){
     prop = `${prefix}${prop}`
     if(registered[prop] === undefined){
-        registered[prop] = [];
+        registered[prop] = {};
     }
-    registered[prop].push(cb)
+    registered[prop][uid] = cb
+}
+
+function observe(prop, cb){
+    prop = `${prefix}${prop}`
+    if(observables[prop] === undefined){
+        observables[prop] = [];
+    }
+    observables[prop].push(cb)
 }
 
 function _deleted(prop){
     //console.log('STATE-DELETED', {prop, states, registered});
-    const keys = Object.keys(registered).filter((k) => {
+    let keys = Object.keys(registered).filter((k) => {
         return (new RegExp(`${prefix}${prop}`)).test(k);
     });
     if(keys.length){
         keys.forEach((k) => {
-            registered[k].forEach((item) => item(getStates(k.replace(prefix, ''))))        
+            Object.keys(registered[k]).forEach((item) => registered[k][item](getStates(k.replace(prefix, ''))))        
+        })
+    }
+    keys = Object.keys(observables).filter((k) => {
+        return (new RegExp(`${prefix}${prop}`)).test(k);
+    });
+    if(keys.length){
+        keys.forEach((k) => {
+            observables[k].forEach((f) => f(getStates(k.replace(prefix, ''))))        
         })
     }
 }
 
 function _updated(prop){
-    console.log('STATE-UPDATED', {prop, states, registered, undos});
+    console.log('STATE-UPDATED', {prop, states, registered, undos, observables});
     if(prop.indexOf('.') !== -1){
         const rb = (a, s) => {
             let it = a.shift();
             s += !s.length ? it : `.${it}`
             let k = `${prefix}${s}`
+            let gs = null
             if(typeof registered[k] === 'object'){
-                let gs = getStates(s);
-                registered[k].forEach((item) => item(gs))
+                Object.keys(registered[k]).forEach((item) => registered[k][item](getStates(s)))
+            }
+            if(typeof observables[k] === 'object'){
+                observables[k].forEach((f) => f(gs ?? getStates(s)))
             }    
             if(a.length){
                 rb(a, s);    
@@ -139,9 +159,13 @@ function _updated(prop){
         rb(prop.split('.'), '')
     }else{
         let k = `${prefix}${prop}`
+        let gs = null
         if(typeof registered[k] === 'object'){
-            let gs = getStates(prop);
-            registered[k].forEach((item) => item(gs))
+            gs = getStates(prop);
+            Object.keys(registered[k]).forEach((item) => registered[k][item](gs))
+        }
+        if(typeof observables[k] === 'object'){
+            observables[k].forEach((f) => f(gs ?? getStates(prop)))
         }
     }
 }
@@ -171,12 +195,22 @@ async function undoStates(){
             const undo = undos.pop()
             if(undo.prop !== undefined && undo.json !== undefined){
                 setStates(undo.prop, undo.json, true).then((r) => {
-                    const keys = Object.keys(registered).filter((k) => {
+                    let keys = Object.keys(registered).filter((k) => {
                         return (new RegExp(`${prefix}${undo.prop}`)).test(k);
                     });
                     if(keys.length){
                         keys.forEach((k) => {
-                            registered[k].forEach((item) => item(getStates(k.replace(prefix, ''))))        
+                            Object
+                            .keys(registered[k])
+                            .forEach((item) => registered[k][item](getStates(k.replace(prefix, ''))))
+                        })
+                    }
+                    keys = Object.keys(observables).filter((k) => {
+                        return (new RegExp(`${prefix}${undo.prop}`)).test(k);
+                    });
+                    if(keys.length){
+                        keys.forEach((k) => {
+                            observables[k].forEach((f) => f(getStates(k.replace(prefix, ''))))
                         })
                     }
                 })
@@ -187,6 +221,6 @@ async function undoStates(){
     }    
 }
 
-export { setStates , getStates, register, delStates, undoStates }
+export { setStates , getStates, register, delStates, undoStates, observe }
 
 //EOF

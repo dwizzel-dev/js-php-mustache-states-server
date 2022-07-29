@@ -145,6 +145,16 @@ const addMenus = async () => {
 
 const test = async (delay) => {
 
+    //a listener in javascript on a specific prop change
+    Appz().then(async(appz) => {
+        appz.obsstates('interest.sport', null, (ev) => {
+            console.log('OBSSTATES[interest.sport]:', ev)
+        })
+        appz.obsstates('menus', null, (ev) => {
+            console.log('OBSSTATES[menus]:', ev)
+        })
+    })
+
     //this will inject on scroll event to lazy load it
     const scrollListener = async (ev) => {
         //remove it since we only want it one time only
@@ -153,10 +163,7 @@ const test = async (delay) => {
         await addMenus()
     }
     //prevent default
-    document.addEventListener('scroll', scrollListener, {
-        passive: true
-    });
-
+    document.addEventListener('scroll', scrollListener, {passive: true});
 
     //those are lately injected with binded/binding to test listener 
     !((t) => {
@@ -193,6 +200,6 @@ const test = async (delay) => {
 }
 
 
-test(1500)
+test(0)
 
 //EOF

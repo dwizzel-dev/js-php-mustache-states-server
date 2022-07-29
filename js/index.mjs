@@ -1,4 +1,7 @@
 
+//some utils
+const randId = () => 'ID' + Math.random().toString().replace('.', '')
+
 //load import async
 async function load(name) {
     return new Promise((resolve, reject) => {
@@ -37,6 +40,8 @@ const binded = async (item) => {
     if(item.dataset.isbinded !== undefined){
         return
     }
+    const uid = randId()
+    item.dataset.uid = uid
     item.dataset.isbinded = 1
     const bindd = item.dataset.binded
     const tpl = item.dataset.templated
@@ -99,8 +104,13 @@ const binded = async (item) => {
         if(state !== null){
             render(state)
         }
-        ModStates.register(prop, (v) => render(v))
+        ModStates.register(prop, uid, (v) => render(v))
     })
+    //some observer on mutations
+    const observer = new MutationObserver((ev) => {
+        console.log(`MUTATION:${uid}`, ev)
+    })
+    observer.observe(item, {subtree: true, childList: true});
 }
 
 const binders = async (item) => {
@@ -185,6 +195,10 @@ const sstates = async(p, v) => {
     await ModStates.setStates(p, v)
 }
 
+const obsstates = async(prop, uid, cb) => {
+    await ModStates.observe(prop, cb)
+}
+
 (async () => {
     console.log('STARTER-STATES', {
         states: await ModStates.getStates(), 
@@ -193,6 +207,6 @@ const sstates = async(p, v) => {
 })();
 
 
-export {binded, binders, binding, action, gstates, sstates}
+export {binded, binders, binding, action, gstates, sstates, obsstates}
 
 //EOF
