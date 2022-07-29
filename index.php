@@ -186,7 +186,6 @@ HTML));
         width:100%;
         box-sizing: border-box;
         border: 2px dotted #00bcd4;
-        min-height: calc(100vw / 4);
       }  
       .infos{
         font-size: var(--font-size-regular);
@@ -237,6 +236,14 @@ HTML));
         right: 15px;
         padding: 5px;
       }
+      @media only screen and (max-width: 480px) {
+        .response,
+        .text {
+          min-height: calc((100vw / 2.5));
+        }
+      }
+      
+
     </style>
     
     <script src="../js/global.js" defer></script>
