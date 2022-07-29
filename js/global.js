@@ -159,7 +159,7 @@ const addNews = async (news) => {
     const newsId = Math.random().toString().replace('.', '')
     const container = `news-${news}-container-${newsId}`
     const response = `${container}-response`
-    const tpl = `${news}-template`
+    const template = `${container}-template`
 
     //container    
     await anode('body', 'div', {class: 'container', id: container})
@@ -179,14 +179,15 @@ const addNews = async (news) => {
     //create a div using the template and states
 
     //container
-    await anode('body', 'div', {class: 'container', id: tpl})
+    await anode('body', 'div', {class: 'container', id: template})
     //the template div
-    await anode(tpl, 'div', {
+    await anode(template, 'div', {
         class: 'text infos',
         'data-binded': news,
         'data-templated': `@news`
     }, `loading ${news} ...`)
-    
+
+    return {container, template}
 }
 
 
@@ -196,11 +197,31 @@ const test = async (delay) => {
 
     //a listener in javascript on a specific prop change
     Appz().then(async(appz) => {
+        let loaded = false
+        let ids = null
         appz.obsstates('interest.sport', (s) => {
             console.log('OBSSTATES[interest.sport]:', s)
             if(s === 'test'){
-                //we will load some sports news
-                addNews('news')
+                //fetch the news
+                if(!loaded){
+                    loaded = true
+                    //we will load some sports news
+                    addNews('news').then((containers) => {
+                        ids = containers    
+                        console.log('NEWSCONTAINERS:', containers)
+                    })
+                }    
+            }else{
+                try{
+                    if(ids !== null && loaded){
+                        //remove the news 
+                        document.getElementById(ids.container).remove();   
+                        document.getElementById(ids.template).remove();  
+                        loaded = false 
+                    }    
+                }catch(e){
+                    console.error(e)
+                }    
             }
         })
         appz.obsstates('menus', (obj) => {
