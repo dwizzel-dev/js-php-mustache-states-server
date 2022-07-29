@@ -147,10 +147,10 @@ const test = async (delay) => {
 
     //a listener in javascript on a specific prop change
     Appz().then(async(appz) => {
-        appz.obsstates('interest.sport', null, (ev) => {
+        appz.obsstates('interest.sport', (ev) => {
             console.log('OBSSTATES[interest.sport]:', ev)
         })
-        appz.obsstates('menus', null, (ev) => {
+        appz.obsstates('menus', (ev) => {
             console.log('OBSSTATES[menus]:', ev)
         })
     })

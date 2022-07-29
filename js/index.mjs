@@ -226,7 +226,7 @@ const sstates = async(p, v) => {
     await ModStates.setStates(p, v)
 }
 
-const obsstates = async(prop, uid, cb) => {
+const obsstates = async(prop, cb) => {
     await ModStates.observe(prop, cb)
 }
 
