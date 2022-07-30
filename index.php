@@ -149,6 +149,9 @@ HTML));
         flex-wrap: nowrap;
         justify-content: space-evenly;
       }
+      .container.wrap{
+        flex-wrap: wrap;
+      }
       .container h3{
         width: 8rem;
         padding: var(--padding);  
@@ -277,8 +280,6 @@ HTML));
       setTimeout(() => {
         window.appz = {binded, binders, binding, action, gstates, sstates, obsstates}
       })
-      
-
     </script>
         
   

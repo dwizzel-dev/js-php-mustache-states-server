@@ -49,11 +49,11 @@ const Appz = () => {
 }
 
 const anode = async (id, type, attr, content) => {
-    await Appz().then(async (appz) => {
-        const el = document.getElementById(id).appendChild(cnode(type, attr))
+    const el = document.getElementById(id).appendChild(cnode(type, attr))
         if(content !== undefined && content !== null){
             el.innerHTML = content
         }
+    await Appz().then(async (appz) => {
         if(attr.hasOwnProperty('data-binded')){
             await appz.binded(el)
         }    
@@ -66,7 +66,9 @@ const anode = async (id, type, attr, content) => {
         if(attr.hasOwnProperty('data-action')){
             await appz.action(el)
         }
-    })   
+    })  
+    
+    return el
 }
 
 const sleep = m => new Promise((resolve) => setTimeout(() => {resolve()}, m))
@@ -98,98 +100,68 @@ const listAllEventListeners = () => {
 
 const addMenus = async () => {
     
-    //@NOTES 
-    //if it doesnt have any dependecies on async data or get set thing
-    //no neeed to await anything since it will listen on before or after dta arrives
+    const prop = `menus`
+    const container = 'menus-' + Math.random().toString().replace('.', '')
 
-    //create a container element
+    await anode('body', 'div', {id: container}, `
+        <input type="hidden" value="${prop}" data-binders="@menus.json.php?lang=fr">
+        <div class="container wrap">
+            <div class="response">
+                <span>Menus Data:</span>
+                <div data-binded="${prop}"></div>        
+                <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
+            </div>    
+            <div class="text infos" data-binded="${prop}" data-templated="@menus">loading ${prop} ...</div>
+        </div>
+    `)
 
-    //our data binders states first since it takes longer to load   
-    anode('body', 'input', {
-        type: 'hidden',
-        value: 'menus',
-        'data-binders': "@menus.json.php?lang=fr"
-    })
-    
-    
-    //container    
-    anode('body', 'div', {class: 'container', id: 'menus-container'})
-    //reponse box
-    anode('menus-container', 'div', {class: 'response', id: 'menus-container-response'})
-    //title
-    anode('menus-container-response', 'span', {}, 'Menus Data: ')
-    //the binded data 
-    anode('menus-container-response', 'div', {'data-binded': 'menus'})
-    //the delete button
-    anode('menus-container-response', 'button', {
-        class: 'clear',
-        'data-action': 'delete',
-        'data-prop': 'menus'
-    }, 'clear state')
-    
-    //create a div using the template and states
+    traverse(container)
 
-    //container
-    anode('body', 'div', {class: 'container', id: 'menus-template'})
-    //the template div
-    anode('menus-template', 'div', {
-        class: 'text infos',
-        'data-binded': 'menus',
-        'data-templated': '@menus'
-    }, 'loading menus ...')
-   
-    
+    return container
 }
 
 const addNews = async (news) => {
 
-    //@NOTES 
-    //if it doesnt have any dependecies on async data or get set thing
-    //no neeed to await anything since it will listen on before or after dta arrives
-
-    //create a container element
-
     const prop = `news`
-
-    //our data binders states first since it takes longer to load   
-    await anode('body', 'input', {
-        type: 'hidden',
-        value: prop,
-        'data-binders': `@news.json.php?cat=${news}`
-    })
+    const container = 'news-' + Math.random().toString().replace('.', '')
     
-    const newsId = Math.random().toString().replace('.', '')
-    const container = `news-${news}-container-${newsId}`
-    const response = `${container}-response`
-    const template = `${container}-template`
+    await anode('body', 'div', {id: container}, `
+        <input type="hidden" value="${prop}" data-binders="@news.json.php?cat=${news}">
+        <div class="container wrap">
+            <div class="response">
+                <span>News Data:</span>
+                <div data-binded="${prop}"></div>        
+                <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
+            </div>    
+            <div class="text infos" data-binded="${prop}" data-templated="@news">loading ${news} ...</div>
+        </div>
+    `)
 
-    //container    
-    await anode('body', 'div', {class: 'container', id: container})
-    //reponse box
-    await anode(container, 'div', {class: 'response', id: response})
-    //title
-    await anode(response, 'span', {}, 'News Data: ')
-    //the binded data 
-    await anode(response, 'div', {'data-binded': prop})
-    //the delete button
-    await anode(response, 'button', {
-        class: 'clear',
-        'data-action': 'delete',
-        'data-prop': prop
-    }, 'clear state')
-    
-    //create a div using the template and states
+    traverse(container)
 
-    //container
-    await anode('body', 'div', {class: 'container', id: template})
-    //the template div
-    await anode(template, 'div', {
-        class: 'text infos',
-        'data-binded': prop,
-        'data-templated': `@news`
-    }, `loading ${news} ...`)
+    return container
 
-    return {container, template}
+}
+
+const traverse = async (id) => {
+    await Appz().then(async (appz) => {
+        //element that can init a state from json base64 encoded or files, first thing to check
+         for await (const item of document.querySelectorAll(`#${id} [data-binders]`)) {
+             await appz.binders(item)
+         }
+         //element that receive the state, third thing to check!!!
+         for await (const item of document.querySelectorAll(`#${id} [data-binded]`)) {
+             await appz.binded(item)
+         }
+         //element that can delete or change object from json input, fourth thing
+         for await (const item of document.querySelectorAll(`#${id} [data-action]`)) {
+             await appz.action(item)
+         }
+         //element that can delete or change object from json input, fourth thing
+         for await (const item of document.querySelectorAll(`#${id} [data-binding]`)) {
+             await appz.binding(item)
+         }
+     })  
 }
 
 
@@ -200,13 +172,13 @@ const test = async (delay) => {
     //a listener in javascript on a specific prop change
     Appz().then(async (appz) => {
         let loaded = false
-        let ids = null
+        let id = null
         let s = await appz.gstates('interest.sport')
         if(['soccer', 'foot'].indexOf(s) !== -1){
             loaded = true
-            addNews(s).then((containers) => {
-                ids = containers    
-                console.log('NEWSCONTAINERS:', containers)
+            addNews(s).then((container) => {
+                id = container    
+                console.log('NEWSCONTAINERS:', container)
             })
         }    
         appz.obsstates('interest.sport', (s) => {
@@ -216,17 +188,16 @@ const test = async (delay) => {
                 if(!loaded){
                     loaded = true
                     //we will load some sports news
-                    addNews(s).then((containers) => {
-                        ids = containers    
-                        console.log('NEWSCONTAINERS:', containers)
+                    addNews(s).then((container) => {
+                        id = container    
+                        console.log('NEWSCONTAINERS:', container)
                     })
                 }    
             }else{
                 try{
-                    if(ids !== null && loaded){
+                    if(id !== null && loaded){
                         //remove the news 
-                        document.getElementById(ids.container).remove();   
-                        document.getElementById(ids.template).remove();  
+                        document.getElementById(id).remove();   
                         loaded = false 
                     }    
                 }catch(e){
