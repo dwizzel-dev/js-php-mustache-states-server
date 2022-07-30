@@ -362,39 +362,13 @@ HTML));
     
 <!-- a template to be used by data-templated -->
     <template data-template="news">
-      <style>
-         .news{
-          color: #673ab7;
-         }
-         .news h2{
-            font-size: 2rem;
-            padding: 0;
-            margin: 0 0 10px 0;
-            color: #311b92;
-          }
-          .news h3{
-            padding: 0;
-            margin: 0;
-            width: unset;
-            text-align: left;
-          }
-          .news ul{
-            margin: 0;
-            padding: 0;
-            list-style: none;
-          }
-          .news li{
-            padding: 5px 0;
-            font-size: 1rem;
-            font-weight: normal;
-          }
-          .news a{
-            color: #673ab7;
-            text-decoration: none;
-          }
-      </style>
       {{#news}}
-        <div class="news">  
+        {{#news.styles}}
+          <style>
+            {{news.styles}}
+          </style>  
+        {{/news.styles}}  
+        <div class="{{news.style}}">  
           <h2>News:</h2>
           {{#news.functions.show}}{{/news.functions.show}}
           <h4>{{{news.title}}}</4>

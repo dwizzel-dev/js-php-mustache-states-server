@@ -1,5 +1,6 @@
 <?php
 $title = ucfirst($_REQUEST['cat'] ?? '');
+$uid = 'UID-'.time();
 $news = [
     "title" => "Some {$title} News!",
     "listing" => [
@@ -14,6 +15,38 @@ $news = [
             "content" => "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."
         ]
     ],
+    "style" => $uid,
+    "styles" =><<<STYLES
+        .{$uid}{
+            color: #673ab7;
+        }
+        .{$uid} h2{
+            font-size: 2rem;
+            padding: 0;
+            margin: 0 0 10px 0;
+            color: #311b92;
+        }
+        .{$uid} h3{
+            padding: 0;
+            margin: 0;
+            width: unset;
+            text-align: left;
+        }
+        .{$uid} ul{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .{$uid} li{
+            padding: 5px 0;
+            font-size: 1rem;
+            font-weight: normal;
+        }
+        .{$uid} a{
+            color: #673ab7;
+            text-decoration: none;
+        }
+STYLES,
     "functions" => [
         "show" =><<<JS
 
