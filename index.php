@@ -67,7 +67,7 @@ $dataBindersInterest = base64_encode(json_encode([
   'musics' => [
     'listing' => ['rap', 'muzak', 'rock', 'metal', 'funk', 'classic', 'blues', 'jazz']
   ],  
-  'sport' => 'parkour',
+  'sport' => 'soccer',
   'functions' => [
     'limitedList' =><<<JS
 
@@ -362,11 +362,14 @@ HTML));
 <!-- a template to be used by data-templated -->
     <template data-template="news">
       <style>
+         .news{
+          color: #673ab7;
+         }
          .news h2{
             font-size: 2rem;
-            color: #333;
             padding: 0;
             margin: 0 0 10px 0;
+            color: #311b92;
           }
           .news h3{
             padding: 0;
@@ -381,10 +384,11 @@ HTML));
           }
           .news li{
             padding: 5px 0;
-            font-size: 1.2rem;
+            font-size: 1rem;
+            font-weight: normal;
           }
           .news a{
-            color: #e91e63;
+            color: #673ab7;
             text-decoration: none;
           }
       </style>

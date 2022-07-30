@@ -1,7 +1,7 @@
 <?php
-$title = $_REQUEST['cat'] ?? '';
+$title = ucfirst($_REQUEST['cat'] ?? '');
 $news = [
-    "title" => "Some {$title}!",
+    "title" => "Some {$title} News!",
     "listing" => [
         [
             "title" => "Good {$title} News",

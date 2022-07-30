@@ -198,9 +198,17 @@ const addNews = async (news) => {
 const test = async (delay) => {
 
     //a listener in javascript on a specific prop change
-    Appz().then(async(appz) => {
+    Appz().then(async (appz) => {
         let loaded = false
         let ids = null
+        let s = await appz.gstates('interest.sport')
+        if(['soccer', 'foot'].indexOf(s) !== -1){
+            loaded = true
+            addNews(s).then((containers) => {
+                ids = containers    
+                console.log('NEWSCONTAINERS:', containers)
+            })
+        }    
         appz.obsstates('interest.sport', (s) => {
             console.log('OBSSTATES[interest.sport]:', s)
             if(['soccer', 'foot'].indexOf(s) !== -1){
