@@ -4,7 +4,7 @@ $title = ucfirst($cat);
 $uid = $_REQUEST['uid'] ?? 'SID-'.crc32($cat.time());
 $cuid = 'content-'.$uid;
 $news = [
-    "uid" => $cuid,
+    "cuid" => $cuid,
     "title" => "Some {$title} News!",
     "listing" => [
         [
@@ -107,8 +107,8 @@ JS,
             Appz().then(async (appz) => {
                 //minor check on existence
                 const n = 'scripted-{$uid}';
-                console.log("SCRIPTED-NEWS-ASYNC:", n);
                 if(document.getElementById(n) === null){
+                    console.log("SCRIPTED-INJECTION[news.script]:", n);
                     const sc = document.createElement("script");
                     sc.setAttributeNode(attr('id', n))
                     sc.appendChild(document.createTextNode(await appz.gstates('news.script'))); 

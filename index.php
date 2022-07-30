@@ -371,7 +371,7 @@ HTML));
             {{news.styles}}
           </style>  
         {{/news.styles}}  
-        <div id="{{news.uid}}">  
+        <div id="{{news.cuid}}">  
           <h2>News:</h2>
           <h4>{{{news.title}}}</4>
           <ul>
