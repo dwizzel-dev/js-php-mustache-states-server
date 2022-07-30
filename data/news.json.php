@@ -29,10 +29,11 @@ $news = [
             color: #311b92;
         }
         #{$cuid} h3{
-            padding: 0;
-            margin: 0;
+            padding: 20px 0 0 0;
+            margin: 10px 0 0 0;
             width: unset;
             text-align: left;
+            border-top: 1px dotted #ccc;
         }
         #{$cuid} ul{
             margin: 0;
@@ -43,6 +44,7 @@ $news = [
             padding: 5px 0;
             font-size: 1rem;
             font-weight: normal;
+            cursor: pointer;
         }
         #{$cuid} a{
             color: #673ab7;
@@ -61,10 +63,40 @@ STYLES,
             //since it wont reinsert that script again so it wont trigger
 
             setTimeout(async () => {
-                console.log("SCRIPT-NEWS:");
-                document.querySelectorAll("#{$cuid} LI").forEach((el) => {
-                    el.onclick = onClickable;
-                })
+                const find = () => {
+                    document.querySelectorAll("#{$cuid} LI").forEach((el) => {
+                        el.onclick = onClickable;
+                    });    
+                }
+                //our parent container of the news which use the template
+                const el = document.getElementById('{$cuid}').parentElement;
+                //set an observer in case content was removed and put back, 
+                //we need to remap the event to it
+                const observer = new MutationObserver((ev) => {
+                    ev.forEach((mutation) => {
+                        //check if it was cleared so we can remove the event from it
+                        //just for debug
+                        [...mutation.removedNodes].forEach((entry) => {
+                            if(entry.id === '{$cuid}'){
+                                console.log('MUTATION-REMOVEDNODES[{$cuid}]');     
+                            }
+                        });
+                        //check if it was readded like a undo states, to put the event back
+                        [...mutation.addedNodes].forEach((entry) => {
+                            if(entry.id === '{$cuid}'){
+                                console.log('MUTATION-ADDEDNODES[{$cuid}]');             
+                                find();
+                            }
+                        });
+                    })
+                });
+                // Start observing the target node for configured mutations
+                observer.observe(el, { childList: true });
+                //stop observing
+                //observer.disconnect();
+                console.log("SCRIPT-NEWS:", el, observer);
+                //apply the event to the LI
+                find();
             });
             
 

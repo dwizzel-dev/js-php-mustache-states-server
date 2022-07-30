@@ -250,7 +250,7 @@ const test = async (delay) => {
     }).then((t) => {
         setInterval(() => {
             console.table(listAllEventListeners())
-        }, 10000);
+        }, 30000);
     })    
 }
 
