@@ -81,7 +81,7 @@ const binded = async (item) => {
     const type = item.tagName
     //get the template from html template or base64 values
     const template = tpl !== undefined ? (
-        tpl.indexOf('@') !== 0 ? atob(tpl) : document.querySelector(`template[data-template="${tpl.replace('@', '')}"]`).innerHTML
+        tpl.indexOf('#') !== 0 ? atob(tpl) : document.querySelector(`template[data-template="${tpl.replace('#', '')}"]`).innerHTML
      ) : null
     //cache the template
     if(template !== null){

@@ -435,7 +435,7 @@ HTML));
     
     <div class="container">
       <!-- with template html from the page -->
-      <div class="text infos" data-binded="personal, phones, interest.musics" data-templated="@infos"></div>  
+      <div class="text infos" data-binded="personal, phones, interest.musics" data-templated="#infos"></div>  
     </div>  
 
     <div class="floating">

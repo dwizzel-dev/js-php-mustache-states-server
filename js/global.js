@@ -111,7 +111,7 @@ const addMenus = async () => {
                 <div data-binded="${prop}"></div>        
                 <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
             </div>    
-            <div class="text infos" data-binded="${prop}" data-templated="@menus">loading ${prop} ...</div>
+            <div class="text infos" data-binded="${prop}" data-templated="#menus">loading ${prop} ...</div>
         </div>
     `)
 
@@ -133,7 +133,7 @@ const addNews = async (news) => {
                 <div data-binded="${prop}"></div>        
                 <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
             </div>    
-            <div class="text infos" data-binded="${prop}" data-templated="@news">loading ${news} ...</div>
+            <div class="text infos" data-binded="${prop}" data-templated="#news">loading ${news} ...</div>
         </div>
     `)
 
