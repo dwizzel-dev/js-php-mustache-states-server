@@ -1,7 +1,10 @@
 <?php
-$title = ucfirst($_REQUEST['cat'] ?? '');
-$uid = 'UID-'.time();
+$cat = $_REQUEST['cat'] ?? '';
+$title = ucfirst($cat);
+$uid = $_REQUEST['uid'] ?? 'SID-'.crc32($cat.time());
+$cuid = 'content-'.$uid;
 $news = [
+    "uid" => $cuid,
     "title" => "Some {$title} News!",
     "listing" => [
         [
@@ -15,44 +18,71 @@ $news = [
             "content" => "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."
         ]
     ],
-    "style" => $uid,
     "styles" =><<<STYLES
-        .{$uid}{
+        #{$cuid}{
             color: #673ab7;
         }
-        .{$uid} h2{
+        #{$cuid} h2{
             font-size: 2rem;
             padding: 0;
             margin: 0 0 10px 0;
             color: #311b92;
         }
-        .{$uid} h3{
+        #{$cuid} h3{
             padding: 0;
             margin: 0;
             width: unset;
             text-align: left;
         }
-        .{$uid} ul{
+        #{$cuid} ul{
             margin: 0;
             padding: 0;
             list-style: none;
         }
-        .{$uid} li{
+        #{$cuid} li{
             padding: 5px 0;
             font-size: 1rem;
             font-weight: normal;
         }
-        .{$uid} a{
+        #{$cuid} a{
             color: #673ab7;
             text-decoration: none;
         }
 STYLES,
-    "functions" => [
-        "show" =><<<JS
+    "script" =><<<JS
 
-            //to test the template using the same for multiple type news
-            console.log("FUNCTIONS-NEWS[show]:", text);
-            return render(text);
+            //set timeout is essential to stack the call,
+            //since the element is not there yet
+            //because the functions:scripted inserting that script 
+            //will pass before doing is render(text)
+
+            //@TODO: 
+            //find a way when the states are erased, to re-listen when they are showing again 
+            //since it wont reinsert that script again so it wont trigger
+
+            setTimeout(async () => {
+                console.log("SCRIPT-NEWS:");
+                document.querySelectorAll("#{$cuid} LI").forEach((el) => {
+                    el.onclick = onClickable;
+                })
+            });
+            
+
+JS, 
+    "functions" => [
+        "scripted" =><<<JS
+
+            Appz().then(async (appz) => {
+                //minor check on existence
+                const n = 'scripted-{$uid}';
+                console.log("SCRIPTED-NEWS-ASYNC:", n);
+                if(document.getElementById(n) === null){
+                    const sc = document.createElement("script");
+                    sc.setAttributeNode(attr('id', n))
+                    sc.appendChild(document.createTextNode(await appz.gstates('news.script'))); 
+                    document.getElementById("body").appendChild(sc);
+                }    
+            }); 
 
 JS
     ]

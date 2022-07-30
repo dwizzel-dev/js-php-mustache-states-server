@@ -2,7 +2,7 @@
 //only global mean window.xxx
 
 window.onClickable = function(){
-    console.log('CLICK:', arguments);
+    console.log('ONCLICKABLE:', arguments)
 }
 
 const attr = (name, value) => {
@@ -126,7 +126,7 @@ const addNews = async (news) => {
     const container = 'news-' + Math.random().toString().replace('.', '')
     
     await anode('body', 'div', {id: container}, `
-        <input type="hidden" value="${prop}" data-binders="@news.json.php?cat=${news}">
+        <input type="hidden" value="${prop}" data-binders="@news.json.php?cat=${news}&uid=${container}">
         <div class="container wrap">
             <div class="response">
                 <span>News Data:</span>
@@ -248,9 +248,9 @@ const test = async (delay) => {
             }, t);
         })
     }).then((t) => {
-        setTimeout(() => {
+        setInterval(() => {
             console.table(listAllEventListeners())
-        }, t);
+        }, 10000);
     })    
 }
 

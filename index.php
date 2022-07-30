@@ -363,14 +363,16 @@ HTML));
 <!-- a template to be used by data-templated -->
     <template data-template="news">
       {{#news}}
+        {{#news.script}}
+          {{#news.functions.scripted}}{{/news.functions.scripted}}
+        {{/news.script}}  
         {{#news.styles}}
           <style>
             {{news.styles}}
           </style>  
         {{/news.styles}}  
-        <div class="{{news.style}}">  
+        <div id="{{news.uid}}">  
           <h2>News:</h2>
-          {{#news.functions.show}}{{/news.functions.show}}
           <h4>{{{news.title}}}</4>
           <ul>
             {{#news.listing}}

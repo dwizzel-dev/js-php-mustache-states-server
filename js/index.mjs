@@ -9,7 +9,7 @@ const _diff = (a1, a2) => a2.filter(d => !a1.includes(d))
 const _intersect = (a1, a2) => a2.filter(d => a1.includes(d))
 
 //load import async
-async function _load(name) {
+ const _load = async (name) => {
     return new Promise((resolve, reject) => {
         import(`/js/modules/${name}.mjs`).then((s) => {
             resolve(s)
@@ -20,7 +20,7 @@ async function _load(name) {
 }
 
 //load file data async
-async function _file(f) {
+const _file= async (f) => {
     return new Promise((resolve, reject) => {
         try{
             fetch((new URL(`/data/${f}`, window.top.location)).href).then((e) => {
@@ -38,7 +38,7 @@ async function _file(f) {
 }
 
 //check if element still there
-async function _garbage() {
+const _garbage = async () => {
     return new Promise((resolve, reject) => {
         if(!bindedElementIds.length){
             resolve()
