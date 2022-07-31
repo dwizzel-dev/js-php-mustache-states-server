@@ -25,13 +25,15 @@ $slider = [
     ],
     "styles" =><<<STYLES
         #{$cuid}{
-            color: #673ab7;
+            color: {$colors['color']};
+            padding: 10px;
+            background: {$colors['background']};
         }
         #{$cuid} h2{
             font-size: 2rem;
             padding: 0;
             margin: 0 0 10px 0;
-            color: #311b92;
+            color: {$colors['h2-color']};
         }
         #{$cuid} h3{
             padding: 20px 0 0 0;
