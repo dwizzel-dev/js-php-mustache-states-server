@@ -140,6 +140,29 @@ const addNews = async (news) => {
 
 }
 
+const addSlider = async (slider) => {
+
+    const prop = `slider`
+    const container = 'slider-' + Math.random().toString().replace('.', '')
+    
+    await anode('body', 'div', {id: container}, `
+        <input type="hidden" value="${prop}" data-binders="@slider.json.php?cat=${slider}&uid=${container}">
+        <div class="container wrap">
+            <div class="response">
+                <span>Slider Data:</span>
+                <div data-binded="${prop}"></div>        
+                <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
+            </div>    
+            <div class="text infos" data-binded="${prop}" data-templated="@slider.html">loading ${slider} ...</div>
+        </div>
+    `)
+
+    traverse(container)
+
+    return container
+
+}
+
 const traverse = async (id) => {
     await Appz().then(async (appz) => {
         //element that can init a state from json base64 encoded or files, first thing to check
@@ -206,6 +229,16 @@ const test = async (delay) => {
             console.log('OBSSTATES[menus]:', obj)
         })
     })
+
+    //some slider
+    //a listener in javascript on a specific prop change
+    //we dont need anything so no await
+    addSlider('flowers').then((container) => {
+        id = container    
+        console.log('SLIDERCONTAINERS:', container)
+    })
+    
+
 
     //this will inject on scroll event to lazy load it
     const scrollListener = async (ev) => {

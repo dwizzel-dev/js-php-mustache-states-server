@@ -1,0 +1,31 @@
+<!-- a template to be used by data-templated -->
+{{#slider}}
+    <!-- parse for sscript -->
+  {{#slider.functions.scripted}}
+    <script>
+      (async () => {
+        //this will be injected by the functions::scripted from the json data
+        //to access the element inside of it only 
+        const scopeElementId = "{{slider.cuid}}"
+        console.log("SCOPEELEMENTID:", scopeElementId)
+
+      })()
+    </script>  
+  {{/slider.functions.scripted}}
+  {{#slider.styles}}
+    <style>
+      {{slider.styles}}
+    </style>  
+  {{/slider.styles}}  
+  <div id="{{slider.cuid}}">  
+    <h2>Slider:</h2>
+    <h4>{{{slider.title}}}</4>
+    <ul>
+      {{#slider.listing}}
+        <li>
+          <img title="{{title}}" src="{{src}}">
+        </li>
+      {{/slider.listing}}
+    </ul>
+  </div>  
+{{/slider}}

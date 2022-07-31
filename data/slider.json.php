@@ -4,42 +4,34 @@ $title = ucfirst($cat);
 $uid = $_REQUEST['uid'] ?? 'SID-'.crc32($cat.time());
 $cuid = 'content-'.$uid;
 
-$colors = $cat === 'soccer' ? [
-    'color' => '#673ab7', 
-    'background' => '#ede7f677',
-    'h2-color' => '#311b92'
-] : [
-    'color' => '#1976d2', 
-    'background' => '#e3f2fd77',
-    'h2-color' => '#0d47a1'
+$colors = [
+    'color' => '#4caf50', 
+    'background' => '#e8f5e977',
+    'h2-color' => '#1b5e20'
 ];
 
-$news = [
+$slider = [
     "cuid" => $cuid,
-    "title" => "Some {$title} News!",
+    "title" => "Some Slider!",
     "listing" => [
         [
-            "title" => "Good {$title} News",
-            "date" => "01-01-1970",
-            "content" => "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio."
+            "title" => "Flower #1",
+            "src" => "/images/slider/1.webp"
         ],
         [
-            "title" => "Bad {$title} News",
-            "date" => "02-01-1970",
-            "content" => "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus, omnis voluptas assumenda est, omnis dolor repellendus."
+            "title" => "Flower #2",
+            "src" => "/images/slider/2.webp"
         ]
     ],
     "styles" =><<<STYLES
         #{$cuid}{
-            color: {$colors['color']};
-            padding: 10px;
-            background: {$colors['background']};
+            color: #673ab7;
         }
         #{$cuid} h2{
             font-size: 2rem;
             padding: 0;
             margin: 0 0 10px 0;
-            color: {$colors['h2-color']};
+            color: #311b92;
         }
         #{$cuid} h3{
             padding: 20px 0 0 0;
@@ -58,6 +50,10 @@ $news = [
             font-size: 1rem;
             font-weight: normal;
             cursor: pointer;
+        }
+        #{$cuid} li img{
+            width: calc(100vw - (100vw - 100%));
+            height: auto;
         }
         #{$cuid} a{
             color: #673ab7;
@@ -155,7 +151,7 @@ JS
     ]
 ];
 
-$json = json_encode($news);
+$json = json_encode($slider);
 
 exit($json);
 
