@@ -165,41 +165,65 @@ STYLES,
             //set an automatic sliding                
             setTimeout(async () => {
                 //get all of them in order of appearence
-                const stack = [];
+                let stacked = false, 
+                    stack = [];
                 const automatic = (ev) => {
-                    ev.preventDefault();
-                    const el =  ev.target;
-                    const num = parseInt(el.dataset.slidenum);
-                    const slide = el.dataset.gotoslide;
-                    const sel = document.getElementById(slide);
-                    //that things mkaes the page move to the top of sliders
-                    //which can be anoying when its automatic
-                    //el.focus();
-                    //sel.scrollIntoView({behavior:'smooth', block:'nearest', inline:'nearest'});
-                    //so will fake it
-                    sel.parentElement.scrollLeft = (num - 1) * gwidth(sel);
-                    //remove theother ficus and put that one
-                    document.querySelectorAll("#{$cuid} .sliding A").forEach((e) => {
-                        e.classList.remove("focus");    
-                    })
-                    el.classList.add("focus");
-                    console.log("SLIDE:", slide, ev);
-
+                    try{
+                        ev.preventDefault();
+                        const el =  ev.target;
+                        const num = parseInt(el.textContent) ?? 1;
+                        const slide = el.getAttribute('href').replace('#', '');
+                        const sel = document.getElementById(slide);
+                        //that things mkaes the page move to the top of sliders
+                        //which can be anoying when its automatic
+                        //el.focus();
+                        //sel.scrollIntoView({behavior:'smooth', block:'nearest', inline:'nearest'});
+                        //so will fake it
+                        sel.parentElement.scrollLeft = (num - 1) * gwidth(sel);
+                        //remove theother ficus and put that one
+                        document.querySelectorAll("#{$cuid} .sliding A").forEach((e) => {
+                            e.classList.remove("focus");    
+                        })
+                        el.classList.add("focus");
+                        console.log("SLIDE:", slide, ev);
+                    }catch(e){
+                        //stop the automation, the slider is probably gone with clear state
+                        console.error(e);
+                    }    
                 }
-                document.querySelectorAll("#{$cuid} .sliding A").forEach((el) => {
-                    //we will change the default behavior
-                    stack.push(el);
-                    el.onclick = automatic;
-                })
-                //swap the last one to the end, 
-                //since we start at the second one
-                stack.push(stack.shift());
+                const stacking = () => {
+                    stack = [];
+                    document.querySelectorAll("#{$cuid} .sliding A").forEach((el) => {
+                        //we will change the default behavior
+                        stack.push(el);
+                        el.onclick = automatic;
+                    })
+                    //swap the last one to the end, 
+                    //since we start at the second one
+                    stack.push(stack.shift());
+                    //flag
+                    stacked = true;
+                }
                 //make it change in X seconds    
                 setInterval(() => {
-                    const el = stack.shift();
-                    stack.push(el);
-                    el.click();
-                }, 3000);
+                    //does it still exist
+                    if(document.getElementById('{$cuid}')){
+                        if(!stacked){
+                            stacking();
+                        }
+                        const el = stack.shift();
+                        stack.push(el);
+                        el.click();
+                    }else{
+                        //if the lement is recreated it will re stack them
+                        stacked = false;
+                    }    
+                }, 5000);
+
+                //@TODO: do a scroll bar observer to place the good A.focus
+                //
+                //
+
             });
             
 

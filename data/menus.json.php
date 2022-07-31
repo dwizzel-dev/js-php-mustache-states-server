@@ -14,6 +14,11 @@ if($lang === 'fr'){
                 'text' => 'Contactez-nous!',
                 'link' => '/contactez-nous/',
                 'id' => 'menu-contact'
+            ],
+            [
+                'text' => 'Go to slide 3!',
+                'link' => '#content-slider-top-slide-3',
+                'id' => 'goto-slider-top'
             ]
         ]
     ];

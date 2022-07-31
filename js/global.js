@@ -41,7 +41,7 @@ const gwidth = (el) => {
         margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight),
         padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
         border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
-        
+
     return width + margin - padding + border;    
 }
 
@@ -118,7 +118,9 @@ const addMenus = async () => {
                 <div data-binded="${prop}"></div>        
                 <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
             </div>    
-            <div class="text infos" data-binded="${prop}" data-templated="@menus.html">loading ${prop} ...</div>
+            <div class="text infos" data-binded="${prop}" data-templated="@menus.html">
+                <div class="loading"></div>
+            </div>
         </div>
     `)
 
@@ -140,7 +142,9 @@ const addNews = async (news) => {
                 <div data-binded="${prop}"></div>        
                 <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
             </div>    
-            <div class="text infos" data-binded="${prop}" data-templated="@news.html">loading ${news} ...</div>
+            <div class="text infos" data-binded="${prop}" data-templated="@news.html">
+                <div class="loading"></div>
+            </div>
         </div>
     `)
 

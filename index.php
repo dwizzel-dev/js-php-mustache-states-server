@@ -72,29 +72,31 @@ $dataBindersInterest = base64_encode(json_encode([
 
 $templatePersonalInterest = base64_encode(utf8_decode(<<<HTML
 
-  <p>
-    {{#personal}}
-      <span>{{personal.firstName}} {{personal.lastName}}</span>
-      {{#personal.age}}
-        {{#personal.functions.getAge}}{{/personal.functions.getAge}}
-        {{#personal.functions.clickable}}
-          {{#personal.functions.bold}}
-              <span>à {{personal.age}}<span>
-          {{/personal.functions.bold}}
-        {{/personal.functions.clickable}}  
-      {{/personal.age}}   
-    {{/personal}}
-    {{#interest.sport}}
-      aime le 
-      <span class="clickable" onclick="onClickable(this, 'interest.sport');">{{interest.sport}}</span>  
-    {{/interest.sport}}
-    {{#interest.musics}}
-      and musics: 
-      {{#interest.musics.listing}}
-        {{{.}}},
-      {{/interest.musics.listing}}  
-    {{/interest.musics}}
-  </p>  
+  <div style="padding:10px;"> 
+    <p>
+      {{#personal}}
+        <span>{{personal.firstName}} {{personal.lastName}}</span>
+        {{#personal.age}}
+          {{#personal.functions.getAge}}{{/personal.functions.getAge}}
+          {{#personal.functions.clickable}}
+            {{#personal.functions.bold}}
+                <span>à {{personal.age}}<span>
+            {{/personal.functions.bold}}
+          {{/personal.functions.clickable}}  
+        {{/personal.age}}   
+      {{/personal}}
+      {{#interest.sport}}
+        aime le 
+        <span class="clickable" onclick="onClickable(this, 'interest.sport');">{{interest.sport}}</span>  
+      {{/interest.sport}}
+      {{#interest.musics}}
+        and musics: 
+        {{#interest.musics.listing}}
+          {{{.}}},
+        {{/interest.musics.listing}}  
+      {{/interest.musics}}
+    </p> 
+</div> 
 
 HTML));
 
@@ -103,9 +105,9 @@ HTML));
 <html lang="fr-CA">
   <head>
     
-    <link rel="preload" href="js/global.js" as="script">
     <link rel="preload" as="image" href="/images/slider/1.webp">
-    
+    <link rel="preload" href="js/global.js" as="script">
+        
     <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1,maximum-scale=1">
     <meta charset="utf-8">
     <title>Binding-Binded-Binders-Mustache</title>
@@ -187,6 +189,7 @@ HTML));
         width:100%;
         box-sizing: border-box;
         border: 1px dotted #999;
+        position: relative;
       }  
       .infos{
         font-size: var(--font-size-regular);
@@ -236,6 +239,28 @@ HTML));
         top: 15px;
         right: 15px;
         padding: 5px;
+      }
+      .loading::before {
+        display: flex;
+        position: absolute;
+        content: "";
+        font-size: 1rem;
+        line-height: 1rem;
+        color: #ccc;
+        animation: loading-anim 2s linear infinite;
+        justify-content: center;
+        letter-spacing: 0.25rem;
+        align-items: center;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+      }
+      @keyframes loading-anim {
+        0% { content: "";}
+        25%{ content: "❤";}
+        50%{ content: "❤❤";}
+        75%{ content: "❤❤❤";}
       }
       @media only screen and (max-width: 480px) {
         .text {
@@ -297,36 +322,38 @@ HTML));
 
     <!-- a template to be used by data-templated, this one will use the personal.getAge functions to show age -->
     <template data-template="infos">
-      {{#personal}}
-        <h2>
-          {{personal.firstName}} 
-          {{personal.lastName}} 
-          {{#personal.age}}
-            {{personal.age}} ans
-          {{/personal.age}}
-        </h2>
-      {{/personal}}
-      {{#phones}}
-        <p><b>Phones :</b></p>    
-        <p>
-          Home: {{phones.home}} <br />
-          Office: {{phones.office}} 
-          {{#personal.marital}}
-            <br />Marital: {{{personal.marital}}}
-            {{#personal.functions.asyncMarital}}
-              <span id="{{id}}"></span>
-            {{/personal.functions.asyncMarital}}
-          {{/personal.marital}}
-        </p>
-      {{/phones}}  
-      {{#interest.musics}}
-        <p><b>Musics :</b></p>    
-        <ul>
-        {{#interest.musics.listing}}
-          <li>{{{.}}}</li>
-        {{/interest.musics.listing}}
-        </ul>
-      {{/interest.musics}}
+      <div style="padding:10px;">
+        {{#personal}}
+          <h2>
+            {{personal.firstName}} 
+            {{personal.lastName}} 
+            {{#personal.age}}
+              {{personal.age}} ans
+            {{/personal.age}}
+          </h2>
+        {{/personal}}
+        {{#phones}}
+          <p><b>Phones :</b></p>    
+          <p>
+            Home: {{phones.home}} <br />
+            Office: {{phones.office}} 
+            {{#personal.marital}}
+              <br />Marital: {{{personal.marital}}}
+              {{#personal.functions.asyncMarital}}
+                <span id="{{id}}"></span>
+              {{/personal.functions.asyncMarital}}
+            {{/personal.marital}}
+          </p>
+        {{/phones}}  
+        {{#interest.musics}}
+          <p><b>Musics :</b></p>    
+          <ul>
+          {{#interest.musics.listing}}
+            <li>{{{.}}}</li>
+          {{/interest.musics.listing}}
+          </ul>
+        {{/interest.musics}}
+      </div>
     </template>  
 
     <div id="slider-top">  
@@ -337,7 +364,9 @@ HTML));
                 <div data-binded="slider"></div>        
                 <button class="clear" data-action="delete" data-prop="slider">clear state</button>
             </div>    
-            <div class="text infos" data-binded="slider" data-templated="@slider.html">loading flowers ...</div>
+            <div class="text infos" data-binded="slider" data-templated="@slider.html">
+              <div class="loading"></div>
+            </div>
         </div>
     </div>
 
@@ -376,7 +405,9 @@ HTML));
 
     <div class="container">
        <!-- with template encoded base64 -->
-      <div class="text" data-binded="personal, interest" data-templated="<?=$templatePersonalInterest?>"></div>  
+      <div class="text" data-binded="personal, interest" data-templated="<?=$templatePersonalInterest?>">
+        <div class="loading"></div>
+      </div>  
     </div>  
     
     <div class="container">
@@ -389,7 +420,9 @@ HTML));
     
     <div class="container">
       <!-- with template html from the page -->
-      <div class="text infos" data-binded="personal, phones, interest.musics" data-templated="#infos"></div>  
+      <div class="text infos" data-binded="personal, phones, interest.musics" data-templated="#infos">
+        <div class="loading"></div>
+      </div>  
     </div>  
 
     <div class="floating">
