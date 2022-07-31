@@ -233,11 +233,13 @@ const test = async (delay) => {
     //some slider
     //a listener in javascript on a specific prop change
     //we dont need anything so no await
+    //its in the index.php for now to testpage speed when slider on top
+    /*
     addSlider('flowers').then((container) => {
         id = container    
         console.log('SLIDERCONTAINERS:', container)
     })
-    
+    */   
 
 
     //this will inject on scroll event to lazy load it
