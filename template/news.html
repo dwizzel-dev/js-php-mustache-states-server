@@ -1,0 +1,24 @@
+<!-- a template to be used by data-templated -->
+{{#news}}
+  {{#news.script}}
+    {{#news.functions.scripted}}{{/news.functions.scripted}}
+  {{/news.script}}  
+  {{#news.styles}}
+    <style>
+      {{news.styles}}
+    </style>  
+  {{/news.styles}}  
+  <div id="{{news.cuid}}">  
+    <h2>News:</h2>
+    <h4>{{{news.title}}}</4>
+    <ul>
+      {{#news.listing}}
+        <li>
+          <h3>{{{title}}}</h3>
+          <p>{{{date}}}</p>
+          <p>{{{content}}}</p>
+        </li>
+      {{/news.listing}}
+    </ul>
+  </div>  
+{{/news}}

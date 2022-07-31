@@ -20,7 +20,7 @@ const _intersect = (a1, a2) => a2.filter(d => a1.includes(d))
 }
 
 //load file data async
-const _file= async (f) => {
+const _data = async (f) => {
     return new Promise((resolve, reject) => {
         try{
             fetch((new URL(`/data/${f}`, window.top.location)).href).then((e) => {
@@ -28,6 +28,25 @@ const _file= async (f) => {
                     reject()
                 }    
                 resolve(e.json());
+            }).catch((e) => {
+                reject(e)
+            });
+        }catch(e){
+            reject(e)
+        }    
+    })
+}
+
+//load the html template
+const _template = async (f) => {
+    return new Promise((resolve, reject) => {
+        try{
+            fetch((new URL(`/template/${f}`, window.top.location)).href)
+            .then((response) => {
+                if (200 !== response.status){
+                    reject()
+                } 
+                resolve(response.text())
             }).catch((e) => {
                 reject(e)
             });
@@ -79,12 +98,20 @@ const binded = async (item) => {
     const bindd = item.dataset.binded
     const tpl = item.dataset.templated
     const type = item.tagName
+    let template = null
     //get the template from html template or base64 values
-    const template = tpl !== undefined ? (
-        tpl.indexOf('#') !== 0 ? atob(tpl) : document.querySelector(`template[data-template="${tpl.replace('#', '')}"]`).innerHTML
-     ) : null
+    if(tpl !== undefined){
+        if(tpl.indexOf('#') !== -1){
+            template = document.querySelector(`template[data-template="${tpl.replace('#', '')}"]`).innerHTML
+        }else if(tpl.indexOf('@') !== -1){
+            template = await _template(tpl.replace('@', ''))
+        }else{
+            template = atob(tpl)
+        }
+    }
     //cache the template
     if(template !== null){
+        console.log(`"TEMPLATE[${tpl}]`, template)
         ModMustache.parse(template)
     }        
     //view redering on load and states modifications
@@ -152,7 +179,7 @@ const binders = async (item) => {
         let obj = null
         const bd = item.dataset.binders
         if(bd.indexOf('@') !== -1){
-            obj = await _file(bd.replace('@', ''))
+            obj = await _data(bd.replace('@', ''))
             await ModStates.setStates(item.value, obj)        
         }else{
             obj = JSON.parse(atob(bd))

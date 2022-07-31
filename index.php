@@ -325,68 +325,6 @@ HTML));
       {{/interest.musics}}
     </template>  
 
-    <!-- a template to be used by data-templated -->
-    <template data-template="menus">
-      <style>
-          .scoped h2{
-            font-size: 2rem;
-            color: #ad1457;
-            padding: 0;
-            margin: 0 0 10px 0;
-          }
-          .scoped ul{
-            margin: 0;
-            padding: 0;
-            list-style: none;
-          }
-          .scoped li{
-            padding: 5px 0;
-            font-size: 1.2rem;
-          }
-          .scoped a{
-            color: #e91e63;
-            text-decoration: none;
-          }
-      </style>
-      {{#menus}}
-        <div class="scoped">  
-          <h2>Menus:</h2>
-          <ul>
-            {{#menus.listing}}
-              <li id="{{id}}"><a href="{{link}}">{{{text}}}</a></li>
-            {{/menus.listing}}
-          </ul>
-        </div>  
-      {{/menus}}
-    </template>  
-    
-<!-- a template to be used by data-templated -->
-    <template data-template="news">
-      {{#news}}
-        {{#news.script}}
-          {{#news.functions.scripted}}{{/news.functions.scripted}}
-        {{/news.script}}  
-        {{#news.styles}}
-          <style>
-            {{news.styles}}
-          </style>  
-        {{/news.styles}}  
-        <div id="{{news.cuid}}">  
-          <h2>News:</h2>
-          <h4>{{{news.title}}}</4>
-          <ul>
-            {{#news.listing}}
-              <li>
-                <h3>{{{title}}}</h3>
-                <p>{{{date}}}</p>
-                <p>{{{content}}}</p>
-              </li>
-            {{/news.listing}}
-          </ul>
-        </div>  
-      {{/news}}
-    </template>  
-
     <div class="container">
       <div class="response">
         <span>Personal Data: </span>
