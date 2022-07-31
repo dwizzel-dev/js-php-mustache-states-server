@@ -104,17 +104,39 @@ JS,
     "functions" => [
         "scripted" =><<<JS
 
-            Appz().then(async (appz) => {
-                //minor check on existence
-                const n = 'scripted-{$uid}';
+            //this will run right away and render it too at the end
+            //we dont need to wait anything, it will be the first runner script
+            if(text.indexOf('<script>')  !== -1){
+                const n = 'scripted-inner-{$uid}';
+                let script = text.replace('<script>', '').replace('</script>', '');
+                //maybe we have some replacer mustache in the script too like a scope id maybe
+                script = render(script)
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INJECTION[news.script]:", n);
+                    console.log("SCRIPTED-INNER-INJECTION[news.script]:", n, script);
                     const sc = document.createElement("script");
                     sc.setAttributeNode(attr('id', n))
-                    sc.appendChild(document.createTextNode(await appz.gstates('news.script'))); 
+                    sc.appendChild(document.createTextNode(script)); 
+                    document.getElementById("body").appendChild(sc);
+                }    
+            }
+
+            //that will be later added
+            Appz().then(async (appz) => {
+                const n = 'scripted-{$uid}';
+                //we need to wai t here or if we have multiple scripted
+                //they will all be to null
+                const script = await appz.gstates('news.script');
+                if(document.getElementById(n) === null){
+                    console.log("SCRIPTED-INJECTION[news.script]:", n, script);
+                    const sc = document.createElement("script");
+                    sc.setAttributeNode(attr('id', n))
+                    sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("body").appendChild(sc);
                 }    
             }); 
+
+            //we dont want to show the inner script
+            return render('')
 
 JS
     ]

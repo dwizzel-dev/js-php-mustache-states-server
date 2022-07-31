@@ -3,6 +3,18 @@
   {{#news.script}}
     {{#news.functions.scripted}}{{/news.functions.scripted}}
   {{/news.script}}  
+    <!-- parse for sscript -->
+  {{#news.functions.scripted}}
+    <script>
+      (async () => {
+        //this will be injected by the functions::scripted from the json data
+        //to access the element inside of it only 
+        const scopeElementId = "{{news.cuid}}"
+        console.log("SCOPEELEMENTID:", scopeElementId)
+        
+      })()
+    </script>  
+  {{/news.functions.scripted}}
   {{#news.styles}}
     <style>
       {{news.styles}}
