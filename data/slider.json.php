@@ -168,7 +168,7 @@ STYLES,
                     const slide = ev.target.dataset.gotoslide;
                     console.log("SLIDE:", slide, ev);
                     document.getElementById(slide).scrollIntoView({ 
-                        behavior: 'smooth', block: 'nearest', inline: 'start' 
+                        behavior: 'smooth', block: 'nearest', inline: 'nearest' 
                     });
                 }
                 document.querySelectorAll("#{$cuid} .sliding A").forEach((el) => {

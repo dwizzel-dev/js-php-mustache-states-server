@@ -103,7 +103,7 @@ HTML));
 <html lang="fr-CA">
   <head>
     
-    <!--<link rel="preload" href="data/phones.json" as="script">-->
+    <link rel="preload" href="js/global.js" as="script">
     <link rel="preload" as="image" href="/images/slider/1.webp">
     
     <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1,maximum-scale=1">
