@@ -5,6 +5,8 @@ window.onClickable = function(){
     console.log('ONCLICKABLE:', arguments)
 }
 
+const sleep = m => new Promise((resolve) => setTimeout(() => {resolve()}, m))
+
 const attr = (name, value) => {
     const attr = document.createAttribute(name)
     attr.value = value
@@ -33,19 +35,16 @@ const cnode = (type, attributes, data, content) => {
     return el
 }
 
-const Appz = () => {
-    return new Promise(resolve => {
-        if(window.appz === undefined){
-            let t = setInterval(() => {
-                if(window.appz !== undefined){
-                    clearInterval(t)
-                    resolve(window.appz)
-                }    
-            })        
-        }else{
-            resolve(window.appz)
+const Appz = async () => {
+    if(window.appz === undefined){
+        while(true){
+            await sleep(2000)
+            if(window.appz !== undefined){
+                return window.appz
+            }
         }
-    })
+    }
+    return window.appz
 }
 
 const anode = async (id, type, attr, content) => {
@@ -70,8 +69,6 @@ const anode = async (id, type, attr, content) => {
     
     return el
 }
-
-const sleep = m => new Promise((resolve) => setTimeout(() => {resolve()}, m))
 
 const listAllEventListeners = () => {
     const allElements = Array.prototype.slice.call(document.querySelectorAll('*'));

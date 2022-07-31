@@ -176,6 +176,8 @@ HTML));
         padding-bottom: 40px;
         position: relative;
         padding-right: 100px;
+        max-height: 200px;
+        overflow: auto;
       }
       .response > div {
         display: inline;

@@ -271,10 +271,10 @@ const obsstates = async(prop, cb) => {
     let collect = async () => {
         //check the elemnt not there anymore
         await _garbage()
-        await _sleep(10000)
+        await _sleep(5000)
         collect()
     }
-    await _sleep(10000)
+    await _sleep(5000)
     collect();
 })();
 
