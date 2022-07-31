@@ -111,10 +111,11 @@ JS,
                 let script = text.replace('<script>', '').replace('</script>', '');
                 //maybe we have some replacer mustache in the script too like a scope id maybe
                 script = render(script)
+                //this one will be created right now and will be there at the next scipter target
+                //so it wontt duplicate
                 if(document.getElementById(n) === null){
                     console.log("SCRIPTED-INNER-INJECTION[news.script]:", n, script);
-                    const sc = document.createElement("script");
-                    sc.setAttributeNode(attr('id', n))
+                    const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("body").appendChild(sc);
                 }    
@@ -123,13 +124,12 @@ JS,
             //that will be later added
             Appz().then(async (appz) => {
                 const n = 'scripted-{$uid}';
-                //we need to wai t here or if we have multiple scripted
+                //we need to await here or if we have multiple scripted
                 //they will all be to null
                 const script = await appz.gstates('news.script');
                 if(document.getElementById(n) === null){
                     console.log("SCRIPTED-INJECTION[news.script]:", n, script);
-                    const sc = document.createElement("script");
-                    sc.setAttributeNode(attr('id', n))
+                    const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("body").appendChild(sc);
                 }    
