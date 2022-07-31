@@ -117,7 +117,7 @@ JS,
                     console.log("SCRIPTED-INNER-INJECTION[news.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
-                    document.getElementById("body").appendChild(sc);
+                    document.getElementById("{$uid}").appendChild(sc);
                 }    
             }
 
@@ -131,7 +131,7 @@ JS,
                     console.log("SCRIPTED-INJECTION[news.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
-                    document.getElementById("body").appendChild(sc);
+                    document.getElementById("{$uid}").appendChild(sc);
                 }    
             }); 
 
