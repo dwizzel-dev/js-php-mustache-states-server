@@ -1,4 +1,5 @@
 <!-- a template to be used by data-templated -->
+<!-- ref: https://css-tricks.com/can-get-pretty-far-making-slider-just-html-css/ -->
 {{#slider}}
     <!-- parse for sscript -->
   {{#slider.functions.scripted}}
@@ -14,18 +15,26 @@
   {{/slider.functions.scripted}}
   {{#slider.styles}}
     <style>
-      {{slider.styles}}
+      {{{slider.styles}}}
     </style>  
   {{/slider.styles}}  
   <div id="{{slider.cuid}}">  
     <h2>Slider:</h2>
-    <h4>{{{slider.title}}}</4>
-    <ul>
-      {{#slider.listing}}
-        <li>
-          <img title="{{title}}" src="{{src}}">
-        </li>
-      {{/slider.listing}}
-    </ul>
+    <div class="slider">
+      <!-- the container slides -->
+      <div class="slides">
+        {{#slider.listing}}
+        <div id="{{slider.cuid}}-slide-{{num}}">
+          <img src="{{src}}" title="{{title}}" alt="{{title}}">
+        </div>
+        {{/slider.listing}}
+      </div>
+      <!-- the number sliding too -->
+      <div class="sliding">
+        {{#slider.listing}}
+          <a href="#{{slider.cuid}}-slide-{{num}}" data-gotoslide="{{slider.cuid}}-slide-{{num}}">{{num}}</a>
+        {{/slider.listing}}
+      </div>
+    </div>
   </div>  
 {{/slider}}

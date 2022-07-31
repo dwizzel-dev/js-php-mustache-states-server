@@ -71,10 +71,6 @@ STYLES,
             //because the functions:scripted inserting that script 
             //will pass before doing is render(text)
 
-            //@TODO: 
-            //find a way when the states are erased, to re-listen when they are showing again 
-            //since it wont reinsert that script again so it wont trigger
-
             setTimeout(async () => {
                 const find = () => {
                     document.querySelectorAll("#{$cuid} LI").forEach((el) => {

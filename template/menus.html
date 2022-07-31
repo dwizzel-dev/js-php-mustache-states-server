@@ -1,26 +1,30 @@
 <style>
-    .scoped h2{
+    .menus{
+      padding: 10px;
+      background: #fce4ec77;
+    }
+    .menus h2{
       font-size: 2rem;
       color: #ad1457;
       padding: 0;
       margin: 0 0 10px 0;
     }
-    .scoped ul{
+    .menus ul{
       margin: 0;
       padding: 0;
       list-style: none;
     }
-    .scoped li{
+    .menus li{
       padding: 5px 0;
       font-size: 1.2rem;
     }
-    .scoped a{
+    .menus a{
       color: #e91e63;
       text-decoration: none;
     }
 </style>
 {{#menus}}
-  <div class="scoped">  
+  <div class="menus">  
     <h2>Menus:</h2>
     <ul>
       {{#menus.listing}}

@@ -67,12 +67,7 @@ $dataBindersInterest = base64_encode(json_encode([
   'musics' => [
     'listing' => ['rap', 'muzak', 'rock', 'metal', 'funk', 'classic', 'blues', 'jazz']
   ],  
-  'sport' => 'soccer',
-  'functions' => [
-    'limitedList' =><<<JS
-
-JS    
-  ]
+  'sport' => 'soccer'
 ]));
 
 $templatePersonalInterest = base64_encode(utf8_decode(<<<HTML
@@ -109,6 +104,7 @@ HTML));
   <head>
     
     <!--<link rel="preload" href="data/phones.json" as="script">-->
+    <link rel="preload" as="image" href="/images/slider/1.webp">
     
     <meta name="viewport" content="height=device-height,width=device-width,initial-scale=1,maximum-scale=1">
     <meta charset="utf-8">
@@ -184,13 +180,13 @@ HTML));
       }
       .text{
         font-size: var(--font-size-medium);
-        padding: var(--padding);
+        padding: 0;
         margin: var(--margin);
         word-break: break-all;
         color: #999;
         width:100%;
         box-sizing: border-box;
-        border: 2px dotted #00bcd4;
+        border: 1px dotted #999;
       }  
       .infos{
         font-size: var(--font-size-regular);
@@ -243,14 +239,14 @@ HTML));
       }
       @media only screen and (max-width: 480px) {
         .text {
-          min-height: calc((100vw / 2.5));
+          min-height: calc((100vw / 3));
         }
         .response{
           max-height: calc((100vw / 2.5));
           min-height: calc((100vw / 2.5));
         }
         #slider-top .text{
-          min-height: calc(100vw * 2);
+          min-height: calc((100vw * 1.25) + 30px + 20px + 2rem); /* + the bottom slider bar height + h2 + h2 margin */
         }
       }
       

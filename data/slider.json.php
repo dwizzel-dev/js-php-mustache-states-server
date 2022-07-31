@@ -15,15 +15,35 @@ $slider = [
     "title" => "Some Slider!",
     "listing" => [
         [
+            "num" => 1,
             "title" => "Flower #1",
             "src" => "/images/slider/1.webp"
         ],
         [
+            "num" => 2,
             "title" => "Flower #2",
             "src" => "/images/slider/2.webp"
+        ],
+        [
+            "num" => 3,
+            "title" => "Flower #3",
+            "src" => "/images/slider/3.webp"
+        ],
+        [
+            "num" => 4,
+            "title" => "Flower #4",
+            "src" => "/images/slider/4.webp"
+        ],
+        [
+            "num" => 5,
+            "title" => "Flower #5",
+            "src" => "/images/slider/5.webp"
         ]
     ],
     "styles" =><<<STYLES
+        
+        /* our basic */
+        
         #{$cuid}{
             color: {$colors['color']};
             padding: 10px;
@@ -35,32 +55,101 @@ $slider = [
             margin: 0 0 10px 0;
             color: {$colors['h2-color']};
         }
-        #{$cuid} h3{
-            padding: 20px 0 0 0;
-            margin: 10px 0 0 0;
-            width: unset;
-            text-align: left;
-            border-top: 1px dotted #ccc;
+        
+
+        /* scoped slider style */
+
+        #{$cuid} * {
+            box-sizing: border-box;
         }
-        #{$cuid} ul{
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-        #{$cuid} li{
-            padding: 5px 0;
-            font-size: 1rem;
-            font-weight: normal;
-            cursor: pointer;
-        }
-        #{$cuid} li img{
+        #{$cuid} .slider {
             width: calc(100vw - (100vw - 100%));
-            height: auto;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
         }
-        #{$cuid} a{
-            color: #673ab7;
+        #{$cuid} .slides {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+        }
+        #{$cuid} .slides::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        #{$cuid} .slides::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 5px;
+            margin-top:5px;
+        }
+        #{$cuid} .slides::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #{$cuid} .slides > div {
+            scroll-snap-align: start;
+            flex-shrink: 0;
+            width: calc(100vw - (100vw - 100%));
+            height: calc((100vw - (100vw - 100%)) / 1.3);
+            margin-right: 0.25rem;
+            border-radius: 10px;
+            background: #eee;
+            transform-origin: center center;
+            transform: scale(1);
+            transition: transform 0.5s;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 100px;
+        }
+        #{$cuid} img {
+            /*object-fit: cover;*/
+            /*position: absolute;*/
+            width: calc(100vw - (100vw - 100%));
+            /*height: 100%;*/
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: calc((100vw - (100vw - 100%)) / 1.3);
+        }
+        #{$cuid} .slider .sliding{
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            left: 0;
+            right: 0;
+            bottom: 1.5rem;
+        }
+        #{$cuid} .slider .sliding > a {
+            display: inline-flex;
+            width: 1.5rem;
+            height: 1.5rem;
+            background: white;
             text-decoration: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 0.25rem;
+            position: relative;
+            opacity: 0.5;
         }
+        #{$cuid} .slider .sliding > a:active {
+            top: 1px;
+        }
+        #{$cuid} .slider .sliding > a:focus {
+            background: #000;
+            color: #333;
+        }
+        @supports (scroll-snap-type) {
+            #{$cuid} .slider > a {
+                display: none;
+            }
+        }
+
+        
 STYLES,
     "script" =><<<JS
 
@@ -69,45 +158,33 @@ STYLES,
             //because the functions:scripted inserting that script 
             //will pass before doing is render(text)
 
-            //@TODO: 
-            //find a way when the states are erased, to re-listen when they are showing again 
-            //since it wont reinsert that script again so it wont trigger
-
+            //set an automatic sliding                
             setTimeout(async () => {
-                const find = () => {
-                    document.querySelectorAll("#{$cuid} LI").forEach((el) => {
-                        el.onclick = onClickable;
-                    });    
+                //get all of them in order of appearence
+                const stack = [];
+                const automatic = (ev) => {
+                    ev.preventDefault();
+                    ev.target.focus();
+                    const slide = ev.target.dataset.gotoslide;
+                    console.log("SLIDE:", slide, ev);
+                    document.getElementById(slide).scrollIntoView({ 
+                        behavior: 'smooth', block: 'nearest', inline: 'start' 
+                    });
                 }
-                //our parent container of the news which use the template
-                const el = document.getElementById('{$cuid}').parentElement;
-                //set an observer in case content was removed and put back, 
-                //we need to remap the event to it
-                const observer = new MutationObserver((ev) => {
-                    ev.forEach((mutation) => {
-                        //check if it was cleared so we can remove the event from it
-                        //just for debug
-                        [...mutation.removedNodes].forEach((entry) => {
-                            if(entry.id === '{$cuid}'){
-                                console.log('MUTATION-REMOVEDNODES[{$cuid}]');     
-                            }
-                        });
-                        //check if it was readded like a undo states, to put the event back
-                        [...mutation.addedNodes].forEach((entry) => {
-                            if(entry.id === '{$cuid}'){
-                                console.log('MUTATION-ADDEDNODES[{$cuid}]');             
-                                find();
-                            }
-                        });
-                    })
-                });
-                // Start observing the target node for configured mutations
-                observer.observe(el, { childList: true });
-                //stop observing
-                //observer.disconnect();
-                console.log("SCRIPT-NEWS:", el, observer);
-                //apply the event to the LI
-                find();
+                document.querySelectorAll("#{$cuid} .sliding A").forEach((el) => {
+                    //we will change the default behavior
+                    stack.push(el);
+                    el.onclick = automatic;
+                })
+                //swap the last one to the end, 
+                //since we start at the second one
+                stack.push(stack.shift());
+                //make it change in X seconds    
+                setInterval(() => {
+                    const el = stack.shift();
+                    stack.push(el);
+                    el.click();
+                }, 3000);
             });
             
 
@@ -125,7 +202,7 @@ JS,
                 //this one will be created right now and will be there at the next scipter target
                 //so it wontt duplicate
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INNER-INJECTION[news.script]:", n, script);
+                    console.log("SCRIPTED-INNER-INJECTION[slider.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);
@@ -137,9 +214,9 @@ JS,
                 const n = 'scripted-{$uid}';
                 //we need to await here or if we have multiple scripted
                 //they will all be to null
-                const script = await appz.gstates('news.script');
+                const script = await appz.gstates('slider.script');
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INJECTION[news.script]:", n, script);
+                    console.log("SCRIPTED-INJECTION[slider.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);
