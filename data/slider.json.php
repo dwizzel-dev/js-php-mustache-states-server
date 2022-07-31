@@ -92,7 +92,7 @@ $slider = [
             flex-shrink: 0;
             width: calc(100vw - (100vw - 100%));
             height: calc((100vw - (100vw - 100%)) / 1.3);
-            margin-right: 0.25rem;
+            margin-right: 10px;
             border-radius: 10px;
             background: #eee;
             transform-origin: center center;
@@ -139,9 +139,13 @@ $slider = [
         #{$cuid} .slider .sliding > a:active {
             top: 1px;
         }
-        #{$cuid} .slider .sliding > a:focus {
+        #{$cuid} .slider .sliding > a.focus {
             background: #000;
             color: #333;
+        }
+        #{$cuid} .slider .sliding > a:focus{
+            background: #333;
+            color: #666;
         }
         @supports (scroll-snap-type) {
             #{$cuid} .slider > a {
@@ -164,12 +168,23 @@ STYLES,
                 const stack = [];
                 const automatic = (ev) => {
                     ev.preventDefault();
-                    ev.target.focus();
-                    const slide = ev.target.dataset.gotoslide;
+                    const el =  ev.target;
+                    const num = parseInt(el.dataset.slidenum);
+                    const slide = el.dataset.gotoslide;
+                    const sel = document.getElementById(slide);
+                    //that things mkaes the page move to the top of sliders
+                    //which can be anoying when its automatic
+                    //el.focus();
+                    //sel.scrollIntoView({behavior:'smooth', block:'nearest', inline:'nearest'});
+                    //so will fake it
+                    sel.parentElement.scrollLeft = (num - 1) * gwidth(sel);
+                    //remove theother ficus and put that one
+                    document.querySelectorAll("#{$cuid} .sliding A").forEach((e) => {
+                        e.classList.remove("focus");    
+                    })
+                    el.classList.add("focus");
                     console.log("SLIDE:", slide, ev);
-                    document.getElementById(slide).scrollIntoView({ 
-                        behavior: 'smooth', block: 'nearest', inline: 'nearest' 
-                    });
+
                 }
                 document.querySelectorAll("#{$cuid} .sliding A").forEach((el) => {
                     //we will change the default behavior

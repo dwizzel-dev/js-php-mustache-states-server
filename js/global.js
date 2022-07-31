@@ -35,6 +35,16 @@ const cnode = (type, attributes, data, content) => {
     return el
 }
 
+const gwidth = (el) => {
+    const style = el.currentStyle || window.getComputedStyle(el),
+        width = el.offsetWidth, // or use style.width
+        margin = parseFloat(style.marginLeft) + parseFloat(style.marginRight),
+        padding = parseFloat(style.paddingLeft) + parseFloat(style.paddingRight),
+        border = parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth);
+        
+    return width + margin - padding + border;    
+}
+
 const Appz = async () => {
     if(window.appz === undefined){
         while(true){
