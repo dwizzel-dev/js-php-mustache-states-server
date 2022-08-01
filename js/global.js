@@ -156,18 +156,20 @@ const addNews = async (news) => {
 
 const addSlider = async (slider) => {
 
-    const prop = `slider`
+    const prop = `slider.${slider}`
     const container = 'slider-' + Math.random().toString().replace('.', '')
     
     await anode('body', 'div', {id: container}, `
-        <input type="hidden" value="${prop}" data-binders="@slider.json.php?cat=${slider}&uid=${container}">
+        <input type="hidden" value="${prop}" data-binders="@slider.json.php?cat=${slider}&uid=${container}&interval=1000">
         <div class="container wrap">
             <div class="response">
-                <span>Slider Data:</span>
+                <span>Slider ${slider} Data:</span>
                 <div data-binded="${prop}"></div>        
                 <button class="clear" data-action="delete" data-prop="${prop}">clear state</button>
             </div>    
-            <div class="text infos" data-binded="${prop}" data-templated="@slider.html">loading ${slider} ...</div>
+            <div class="text infos" data-binded="${prop}" data-templated="@slider.html.php?cat=${slider}">
+                <div class="loading"></div>
+            </div>
         </div>
     `)
 
@@ -261,6 +263,7 @@ const test = async (delay) => {
         //remove it since we only want it one time only
         document.removeEventListener('scroll', scrollListener)
         //we can lazy load our bottom Menus
+        await addSlider('dog')
         await addMenus()
     }
     //prevent default

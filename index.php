@@ -357,14 +357,14 @@ HTML));
     </template>  
 
     <div id="slider-top">  
-      <input type="hidden" value="slider" data-binders="@slider.json.php?cat=flowers&uid=slider-top">
+      <input type="hidden" value="slider.flowers" data-binders="@slider.json.php?cat=flowers&uid=slider-top">
         <div class="container wrap">
             <div class="response">
                 <span>Slider Data:</span>
-                <div data-binded="slider"></div>        
-                <button class="clear" data-action="delete" data-prop="slider">clear state</button>
+                <div data-binded="slider.flowers"></div>        
+                <button class="clear" data-action="delete" data-prop="slider.flowers">clear state</button>
             </div>    
-            <div class="text infos" data-binded="slider" data-templated="@slider.html">
+            <div class="text infos" data-binded="slider.flowers" data-templated="@slider.html.php?cat=flowers">
               <div class="loading"></div>
             </div>
         </div>

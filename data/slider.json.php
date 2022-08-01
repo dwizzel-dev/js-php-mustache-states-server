@@ -1,7 +1,11 @@
 <?php
-$cat = $_REQUEST['cat'] ?? '';
-$title = ucfirst($cat);
+
+$cat = $_REQUEST['cat'] ?? 'default';
+$interval = $_REQUEST['interval'] ?? 5000;
+
 $uid = $_REQUEST['uid'] ?? 'SID-'.crc32($cat.time());
+
+$title = ucfirst($cat);
 $cuid = 'content-'.$uid;
 
 $colors = [
@@ -185,7 +189,7 @@ STYLES,
                             e.classList.remove("focus");    
                         })
                         el.classList.add("focus");
-                        console.log("SLIDE:", slide, ev);
+                        //console.log("SLIDE:", slide, ev);
                     }catch(e){
                         //stop the automation, the slider is probably gone with clear state
                         console.error(e);
@@ -218,7 +222,7 @@ STYLES,
                         //if the lement is recreated it will re stack them
                         stacked = false;
                     }    
-                }, 5000);
+                }, {$interval});
 
                 //@TODO: do a scroll bar observer to place the good A.focus
                 //
@@ -241,7 +245,7 @@ JS,
                 //this one will be created right now and will be there at the next scipter target
                 //so it wontt duplicate
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INNER-INJECTION[slider.script]:", n, script);
+                    console.log("SCRIPTED-INNER-INJECTION[slider.{$cat}.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);
@@ -253,9 +257,9 @@ JS,
                 const n = 'scripted-{$uid}';
                 //we need to await here or if we have multiple scripted
                 //they will all be to null
-                const script = await appz.gstates('slider.script');
+                const script = await appz.gstates('slider.{$cat}.script');
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INJECTION[slider.script]:", n, script);
+                    console.log("SCRIPTED-INJECTION[slider.{$cat}.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);
