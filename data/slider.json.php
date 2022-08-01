@@ -1,11 +1,11 @@
 <?php
 
-$cat = $_REQUEST['cat'] ?? 'default';
+$prop = $_REQUEST['prop'] ?? 'default';
 $interval = $_REQUEST['interval'] ?? 5000;
 
-$uid = $_REQUEST['uid'] ?? 'SID-'.crc32($cat.time());
+$uid = $_REQUEST['uid'] ?? 'SID-'.crc32($prop.time());
 
-$title = ucfirst($cat);
+$title = ucfirst($prop);
 $cuid = 'content-'.$uid;
 
 $colors = [
@@ -245,7 +245,7 @@ JS,
                 //this one will be created right now and will be there at the next scipter target
                 //so it wontt duplicate
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INNER-INJECTION[slider.{$cat}.script]:", n, script);
+                    console.log("SCRIPTED-INNER-INJECTION[{$prop}.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);
@@ -257,9 +257,9 @@ JS,
                 const n = 'scripted-{$uid}';
                 //we need to await here or if we have multiple scripted
                 //they will all be to null
-                const script = await appz.gstates('slider.{$cat}.script');
+                const script = await appz.gstates('{$prop}.script');
                 if(document.getElementById(n) === null){
-                    console.log("SCRIPTED-INJECTION[slider.{$cat}.script]:", n, script);
+                    console.log("SCRIPTED-INJECTION[{$prop}.script]:", n, script);
                     const sc = cnode("script", {id: n});
                     sc.appendChild(document.createTextNode(script)); 
                     document.getElementById("{$uid}").appendChild(sc);

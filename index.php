@@ -176,6 +176,7 @@ HTML));
         padding-right: 100px;
         max-height: 200px;
         overflow: auto;
+        /*display:none;*/
       }
       .response > div {
         display: inline;
@@ -357,14 +358,14 @@ HTML));
     </template>  
 
     <div id="slider-top">  
-      <input type="hidden" value="slider.flowers" data-binders="@slider.json.php?cat=flowers&uid=slider-top">
+      <input type="hidden" value="slider.flowers" data-binders="@slider.json.php?prop=slider.flowers&uid=slider-top">
         <div class="container wrap">
             <div class="response">
                 <span>Slider Data:</span>
                 <div data-binded="slider.flowers"></div>        
                 <button class="clear" data-action="delete" data-prop="slider.flowers">clear state</button>
             </div>    
-            <div class="text infos" data-binded="slider.flowers" data-templated="@slider.html.php?cat=flowers">
+            <div class="text infos" data-binded="slider.flowers" data-templated="@slider.html.php?prop=slider.flowers">
               <div class="loading"></div>
             </div>
         </div>

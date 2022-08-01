@@ -1,49 +1,49 @@
 <?php
 
-$cat = $_REQUEST['cat'] ?? 'default';
+$prop = $_REQUEST['prop'] ?? 'default';
 
 $template =<<<HTML
 
     <!-- a template to be used by data-templated -->
     <!-- ref: https://css-tricks.com/can-get-pretty-far-making-slider-just-html-css/ -->
-    {{#slider.{$cat}}}
+    {{#{$prop}}}
         <!-- parse for sscript -->
-    {{#slider.{$cat}.functions.scripted}}
+    {{#{$prop}.functions.scripted}}
         <script>
         (async () => {
             //this will be injected by the functions::scripted from the json data
             //to access the element inside of it only 
-            const scopeElementId = "{{slider.{$cat}.cuid}}"
+            const scopeElementId = "{{{$prop}.cuid}}"
             console.log("SCOPEELEMENTID:", scopeElementId)
 
         })()
         </script>  
-    {{/slider.{$cat}.functions.scripted}}
-    {{#slider.{$cat}.styles}}
+    {{/{$prop}.functions.scripted}}
+    {{#{$prop}.styles}}
         <style>
-        {{{slider.{$cat}.styles}}}
+        {{{{$prop}.styles}}}
         </style>  
-    {{/slider.{$cat}.styles}}  
-    <div id="{{slider.{$cat}.cuid}}">  
+    {{/{$prop}.styles}}  
+    <div id="{{{$prop}.cuid}}">  
         <h2>Slider:</h2>
         <div class="slider">
         <!-- the container slides -->
         <div class="slides">
-            {{#slider.{$cat}.listing}}
-            <div id="{{slider.{$cat}.cuid}}-slide-{{num}}">
+            {{#{$prop}.listing}}
+            <div id="{{{$prop}.cuid}}-slide-{{num}}">
             <img src="{{src}}" title="{{title}}" alt="{{title}}">
             </div>
-            {{/slider.{$cat}.listing}}
+            {{/{$prop}.listing}}
         </div>
         <!-- the number sliding too -->
         <div class="sliding">
-            {{#slider.{$cat}.listing}}
-            <a href="#{{slider.{$cat}.cuid}}-slide-{{num}}">{{num}}</a>
-            {{/slider.{$cat}.listing}}
+            {{#{$prop}.listing}}
+            <a href="#{{{$prop}.cuid}}-slide-{{num}}">{{num}}</a>
+            {{/{$prop}.listing}}
         </div>
         </div>
     </div>  
-    {{/slider.{$cat}}}
+    {{/{$prop}}}
 
 HTML;
 
